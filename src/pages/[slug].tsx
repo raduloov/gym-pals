@@ -40,7 +40,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
       <PageLayout>
         <div className="relative h-36 border-slate-400 bg-slate-600">
           <Image
-            src={data.profilePicture}
+            src={data.profileImageUrl}
             alt={`${data.username ?? ""}'s profile pic`}
             width={128}
             height={128}
