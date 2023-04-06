@@ -4,10 +4,32 @@ import Image from "next/image";
 import Link from "next/link";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { workoutTypeMapper } from "~/mappers/workoutTypeMapper";
+import type { Prisma } from "@prisma/client";
+import type { Exercise } from "~/pages/create-workout";
 
 dayjs.extend(relativeTime);
 
 type WorkoutWithUser = RouterOutputs["workouts"]["getAll"][number];
+
+const parseWorkoutContentJSON = (content: Prisma.JsonValue): string => {
+  let parsedContent = "";
+
+  for (const exercise of Object.values(content as unknown as Exercise[])) {
+    parsedContent += ` - ${exercise.name}:`;
+
+    for (const [index, set] of exercise.sets.entries()) {
+      parsedContent += ` ${set.reps}x${set.weight}kg`;
+
+      if (index !== exercise.sets.length - 1) {
+        parsedContent += ",";
+      }
+    }
+
+    parsedContent += "\n";
+  }
+
+  return parsedContent;
+};
 
 export const WorkoutView = (props: WorkoutWithUser) => {
   const { workout, author } = props;
@@ -34,6 +56,9 @@ export const WorkoutView = (props: WorkoutWithUser) => {
           </Link>
         </div>
         <span className="text-2xl">{workout.title}</span>
+        <span className="whitespace-pre-wrap text-slate-400">
+          {parseWorkoutContentJSON(workout.content)}
+        </span>
       </div>
     </div>
   );
