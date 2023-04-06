@@ -3,7 +3,7 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import { PageLayout } from "~/components/Layout";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
-import { WorkoutView } from "~/components/PostView";
+import { WorkoutView } from "~/components/WorkoutView";
 
 const SingleWorkoutPage: NextPage<{ id: string }> = ({ id }) => {
   const { data } = api.workouts.getById.useQuery({

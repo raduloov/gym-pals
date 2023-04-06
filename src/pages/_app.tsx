@@ -11,8 +11,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>Chirp</title>
-        <meta name="description" content="💭" />
+        <title>Gym-Pals</title>
+        <meta name="description" content="💪" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ClerkProvider {...pageProps}>

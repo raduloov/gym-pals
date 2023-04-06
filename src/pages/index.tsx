@@ -6,7 +6,7 @@ import { LoadingPage, LoadingSpinner } from "~/components/Loading";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { PageLayout } from "~/components/Layout";
-import { WorkoutView } from "~/components/PostView";
+import { WorkoutView } from "~/components/WorkoutView";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
