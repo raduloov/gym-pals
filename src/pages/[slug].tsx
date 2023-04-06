@@ -4,11 +4,11 @@ import { api } from "~/utils/api";
 import { PageLayout } from "~/components/Layout";
 import Image from "next/image";
 import { LoadingPage } from "~/components/Loading";
-import { PostView } from "~/components/PostView";
+import { WorkoutView } from "~/components/PostView";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
 
 const ProfileFeed = (props: { userId: string }) => {
-  const { data, isLoading } = api.posts.getPostsByUserId.useQuery({
+  const { data, isLoading } = api.workouts.getWorkoutsByUserId.useQuery({
     userId: props.userId,
   });
 
@@ -18,8 +18,8 @@ const ProfileFeed = (props: { userId: string }) => {
 
   return (
     <div className="flex flex-col">
-      {data.map((fullPost) => (
-        <PostView {...fullPost} key={fullPost.post.id} />
+      {data.map((fullWorkout) => (
+        <WorkoutView {...fullWorkout} key={fullWorkout.workout.id} />
       ))}
     </div>
   );

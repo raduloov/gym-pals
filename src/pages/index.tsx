@@ -6,7 +6,7 @@ import { LoadingPage, LoadingSpinner } from "~/components/Loading";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { PageLayout } from "~/components/Layout";
-import { PostView } from "~/components/PostView";
+import { WorkoutView } from "~/components/PostView";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
@@ -15,10 +15,10 @@ const CreatePostWizard = () => {
 
   const ctx = api.useContext();
 
-  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+  const { mutate, isLoading: isPosting } = api.workouts.create.useMutation({
     onSuccess: async () => {
       setInput("");
-      await ctx.posts.getAll.invalidate();
+      await ctx.workouts.getAll.invalidate();
     },
     onError: (e) => {
       const errorMessage = e.data?.zodError?.fieldErrors.content;
@@ -52,13 +52,13 @@ const CreatePostWizard = () => {
           if (e.key === "Enter") {
             e.preventDefault();
             if (input !== "") {
-              mutate({ content: input });
+              mutate({ title: input });
             }
           }
         }}
       />
       {input != "" && !isPosting && (
-        <button onClick={() => mutate({ content: input })}>Post</button>
+        <button onClick={() => mutate({ title: input })}>Post</button>
       )}
       {isPosting && (
         <div className="flex items-center justify-center">
@@ -70,7 +70,7 @@ const CreatePostWizard = () => {
 };
 
 const Feed = () => {
-  const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
+  const { data, isLoading: postsLoading } = api.workouts.getAll.useQuery();
 
   if (postsLoading) return <LoadingPage />;
 
@@ -78,8 +78,8 @@ const Feed = () => {
 
   return (
     <div className="flex flex-col">
-      {data.map((fullPost) => (
-        <PostView {...fullPost} key={fullPost.post.id} />
+      {data.map((fullWorkout) => (
+        <WorkoutView {...fullWorkout} key={fullWorkout.workout.id} />
       ))}
     </div>
   );
@@ -89,7 +89,7 @@ const Home: NextPage = () => {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
 
   // Start fetching asap
-  api.posts.getAll.useQuery();
+  api.workouts.getAll.useQuery();
 
   // Return empty div if user isn't loaded
   if (!userLoaded) return <div />;

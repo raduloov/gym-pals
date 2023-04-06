@@ -3,24 +3,24 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import { PageLayout } from "~/components/Layout";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
-import { PostView } from "~/components/PostView";
+import { WorkoutView } from "~/components/PostView";
 
-const SinglePostPage: NextPage<{ id: string }> = ({ id }) => {
-  const { data } = api.posts.getById.useQuery({
+const SingleWorkoutPage: NextPage<{ id: string }> = ({ id }) => {
+  const { data } = api.workouts.getById.useQuery({
     id,
   });
-
-  console.log("ID:", id);
 
   if (!data) return <div>Not found</div>;
 
   return (
     <>
       <Head>
-        <title>{`${data.post.content} - @${data.author.username}`}</title>
+        <title>{`${data.workout.title ?? ""} - @${
+          data.author.username
+        }`}</title>
       </Head>
       <PageLayout>
-        <PostView {...data} />
+        <WorkoutView {...data} />
       </PageLayout>
     </>
   );
@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   if (typeof id !== "string") throw new Error("no id");
 
-  await ssg.posts.getById.prefetch({ id });
+  await ssg.workouts.getById.prefetch({ id });
 
   return {
     props: {
@@ -50,4 +50,4 @@ export const getStaticPaths = () => {
   };
 };
 
-export default SinglePostPage;
+export default SingleWorkoutPage;

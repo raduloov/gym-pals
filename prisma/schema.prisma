@@ -11,25 +11,36 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    content   String  @db.Text
-    likes     Int      @default(0)
-    authorId  String
-    comments  Comment[]
+model Workout {
+    id          String           @id @default(cuid())
+    createdAt   DateTime         @default(now())
+    title       String?          @db.Text
+    workoutType WorkoutType      @default(WEIGHTLIFTING)
+    content     Json?            @db.Json 
+    likes       Int              @default(0)
+    authorId    String
+    comments    Comment[]
 
     @@index([authorId])
 }
 
 model Comment {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    content   String  @db.Text
-    likes     Int      @default(0)
-    authorId  String
-    postId    String
-    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    id          String           @id @default(cuid())
+    createdAt   DateTime         @default(now())
+    content     String           @db.Text
+    likes       Int              @default(0)
+    authorId    String      
+    workoutId   String      
+    workout     Workout          @relation(fields: [workoutId], references: [id], onDelete: Cascade)
 
-    @@index([postId])
+    @@index([workoutId])
+}
+
+enum WorkoutType {
+    WEIGHTLIFTING
+    COMBAT_SPORTS
+    WATER_SPORTS
+    WINTER_SPORTS
+    CARDIO
+    OTHER
 }
