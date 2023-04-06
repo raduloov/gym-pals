@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { workoutTypeMapper } from "~/mappers/workoutTypeMapper";
 
 dayjs.extend(relativeTime);
 
@@ -25,6 +26,7 @@ export const WorkoutView = (props: WorkoutWithUser) => {
           <Link href={`/@${author.username}`}>
             <span>{`@${author.username}`}</span>
           </Link>
+          <span>{` · ${workoutTypeMapper(workout.workoutType)}`}</span>
           <Link href={`/workout/${workout.id}`}>
             <span className="font-thin">{` · ${dayjs(
               workout.createdAt
