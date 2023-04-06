@@ -1,9 +1,5 @@
 import type { User } from "@clerk/nextjs/dist/api";
-
-const getUsernameFromEmail = (email: string) => {
-  const [username] = email.split("@");
-  return username;
-};
+import { getUsernameFromEmail } from "./getUsernameFromEmail";
 
 export const filterUserForClient = (user: User) => {
   return {

@@ -11,6 +11,7 @@ export const profileRouter = createTRPCRouter({
     .query(async ({ input }) => {
       const [user] = await clerkClient.users.getUserList({
         username: [input.username],
+        emailAddress: [`${input.username}@gmail.com`],
       });
 
       if (!user) {
