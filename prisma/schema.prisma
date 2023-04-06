@@ -14,7 +14,7 @@ generator client {
 model Post {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    content   String?  @db.Text
+    content   String  @db.Text
     likes     Int      @default(0)
     authorId  String
     comments  Comment[]
@@ -25,7 +25,7 @@ model Post {
 model Comment {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    content   String?  @db.Text
+    content   String  @db.Text
     likes     Int      @default(0)
     authorId  String
     postId    String
