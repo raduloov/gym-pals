@@ -25,7 +25,11 @@ const CreateWorkoutWizard = () => {
   const [input, setInput] = useState("New workout 💪");
   const [selectedWorkoutType, setSelectedWorkoutType] =
     useState<Workout | null>(null);
+  const [isSelectingExercises, setIsSelectingExercises] = useState(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+
+  const { data: allExercises, isLoading: exercisesLoading } =
+    api.workouts.getAllExercises.useQuery();
 
   const ctx = api.useContext();
 
@@ -92,14 +96,23 @@ const CreateWorkoutWizard = () => {
         />
       )}
 
-      {selectedWorkoutType && (
+      {selectedWorkoutType && !isSelectingExercises && (
         <div>
           <button
+            onClick={() => setIsSelectingExercises((prev) => !prev)}
             type="button"
             className="mb-2 mr-2 rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
           >
             + Add exercise
           </button>
+        </div>
+      )}
+
+      {isSelectingExercises && (
+        <div className="mt-4">
+          {allExercises?.map((exercise) => (
+            <div key={exercise.id}>{exercise.title}</div>
+          ))}
         </div>
       )}
     </>

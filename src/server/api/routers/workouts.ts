@@ -82,6 +82,14 @@ export const workoutsRouter = createTRPCRouter({
         .then(addUserDataToWorkouts)
     ),
 
+  getAllExercises: publicProcedure.query(async ({ ctx }) => {
+    const exercises = await ctx.prisma.weightliftingExcercise.findMany({
+      take: 100,
+    });
+
+    return exercises;
+  }),
+
   create: privateProcedure
     .input(
       z.object({
