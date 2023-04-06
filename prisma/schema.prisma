@@ -36,6 +36,11 @@ model Comment {
     @@index([workoutId])
 }
 
+model WeightliftingExcercise {
+    id          Int              @id @default(autoincrement())
+    title       String?          @db.Text
+}
+
 enum WorkoutType {
     WEIGHTLIFTING
     COMBAT_SPORTS

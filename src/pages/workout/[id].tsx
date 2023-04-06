@@ -1,7 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { PageLayout } from "~/components/Layout";
+import { PageLayout } from "~/components/common/Layout";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
 import { WorkoutView } from "~/components/WorkoutView";
 

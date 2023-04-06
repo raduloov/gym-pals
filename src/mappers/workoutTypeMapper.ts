@@ -1,6 +1,6 @@
 import { WorkoutType } from "@prisma/client";
 
-enum Workout {
+export enum Workout {
   WEIGHTLIFTING = "Weightlifting",
   COMBAT_SPORTS = "Combat Sports",
   WATER_SPORTS = "Water Sports",

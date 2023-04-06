@@ -1,73 +1,10 @@
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import { api } from "~/utils/api";
-import Image from "next/image";
-import { LoadingPage, LoadingSpinner } from "~/components/Loading";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
-import { PageLayout } from "~/components/Layout";
+import { LoadingPage } from "~/components/common/Loading";
+import { PageLayout } from "~/components/common/Layout";
 import { WorkoutView } from "~/components/WorkoutView";
-
-const CreatePostWizard = () => {
-  const { user } = useUser();
-
-  const [input, setInput] = useState("");
-
-  const ctx = api.useContext();
-
-  const { mutate, isLoading: isPosting } = api.workouts.create.useMutation({
-    onSuccess: async () => {
-      setInput("");
-      await ctx.workouts.getAll.invalidate();
-    },
-    onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors.content;
-      if (errorMessage && errorMessage[0]) {
-        toast.error(errorMessage[0]);
-      } else {
-        toast.error("Failed to post! Please try again later.");
-      }
-    },
-  });
-
-  if (!user) return null;
-
-  return (
-    <div className="flex w-full gap-3">
-      <Image
-        src={user.profileImageUrl}
-        alt="Profile image"
-        className="h-14 w-14 rounded-full"
-        width={56}
-        height={56}
-      />
-      <input
-        placeholder="Type some emojis!"
-        className="grow bg-transparent outline-none"
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        disabled={isPosting}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            if (input !== "") {
-              mutate({ title: input });
-            }
-          }
-        }}
-      />
-      {input != "" && !isPosting && (
-        <button onClick={() => mutate({ title: input })}>Post</button>
-      )}
-      {isPosting && (
-        <div className="flex items-center justify-center">
-          <LoadingSpinner size={20} />
-        </div>
-      )}
-    </div>
-  );
-};
+import Link from "next/link";
 
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.workouts.getAll.useQuery();
@@ -102,7 +39,13 @@ const Home: NextPage = () => {
             <SignInButton />
           </div>
         )}
-        {isSignedIn && <CreatePostWizard />}
+        {isSignedIn && (
+          <Link href={"/create-workout"}>
+            <div className="flex h-10 w-40 items-center justify-center bg-red-200 text-black">
+              Add a workout
+            </div>
+          </Link>
+        )}
       </div>
 
       <Feed />
