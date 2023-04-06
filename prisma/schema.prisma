@@ -38,7 +38,7 @@ model Comment {
 
 model WeightliftingExcercise {
     id          Int              @id @default(autoincrement())
-    title       String?          @db.Text
+    title       String           @db.Text
 }
 
 enum WorkoutType {

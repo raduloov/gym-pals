@@ -24,7 +24,7 @@ const addUserDataToWorkouts = async (workouts: Workout[]) => {
   return workouts.map((workout) => {
     const author = users.find((user) => user.id === workout.authorId);
 
-    if (!author || !author.username)
+    if (!author)
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Author for workout not found",
@@ -82,18 +82,21 @@ export const workoutsRouter = createTRPCRouter({
         .then(addUserDataToWorkouts)
     ),
 
-  getAllExercises: publicProcedure.query(async ({ ctx }) => {
-    const exercises = await ctx.prisma.weightliftingExcercise.findMany({
-      take: 100,
-    });
-
-    return exercises;
-  }),
-
   create: privateProcedure
     .input(
       z.object({
         title: z.string().min(1).max(100),
+        content: z.array(
+          z.object({
+            name: z.string(),
+            sets: z.array(
+              z.object({
+                weight: z.number(),
+                reps: z.number(),
+              })
+            ),
+          })
+        ),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -107,6 +110,7 @@ export const workoutsRouter = createTRPCRouter({
         data: {
           authorId,
           title: input.title,
+          content: input.content,
         },
       });
 
