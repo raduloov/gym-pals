@@ -9,7 +9,8 @@ import { LoadingSpinner } from "~/components/common/Loading";
 import { api } from "~/utils/api";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
 import { Button } from "~/components/common/Button";
-import type { Workout } from "~/mappers/workoutTypeMapper";
+import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
+import { workoutTypeClientToPrismaMapper } from "~/mappers/workoutTypeMapper";
 
 export interface Exercise {
   name: string;
@@ -24,11 +25,9 @@ const CreateWorkoutWizard = () => {
 
   const [title, setTitle] = useState("New workout 💪");
   const [selectedWorkoutType, setSelectedWorkoutType] =
-    useState<Workout | null>(null);
+    useState<WorkoutTypeClient | null>(null);
   const [isSelectingExercises, setIsSelectingExercises] = useState(false);
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
-
-  console.log("selectedExercises", selectedExercises);
 
   const { data: allExercises, isLoading: exercisesLoading } =
     api.exercises.getAll.useQuery();
@@ -72,7 +71,13 @@ const CreateWorkoutWizard = () => {
             if (e.key === "Enter") {
               e.preventDefault();
               if (title !== "") {
-                mutate({ title, content: selectedExercises });
+                mutate({
+                  title,
+                  content: selectedExercises,
+                  workoutType: workoutTypeClientToPrismaMapper(
+                    selectedWorkoutType as WorkoutTypeClient
+                  ),
+                });
               }
             }
           }}
@@ -85,7 +90,15 @@ const CreateWorkoutWizard = () => {
 
         {title != "" && !isPosting && (
           <Button
-            onClick={() => mutate({ title, content: selectedExercises })}
+            onClick={() =>
+              mutate({
+                title,
+                content: selectedExercises,
+                workoutType: workoutTypeClientToPrismaMapper(
+                  selectedWorkoutType as WorkoutTypeClient
+                ),
+              })
+            }
             label="Post workout"
           />
         )}

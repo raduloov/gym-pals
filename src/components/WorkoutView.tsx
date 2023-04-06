@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { workoutTypeMapper } from "~/mappers/workoutTypeMapper";
+import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import type { Prisma } from "@prisma/client";
 import type { Exercise } from "~/pages/create-workout";
 
@@ -48,7 +48,9 @@ export const WorkoutView = (props: WorkoutWithUser) => {
           <Link href={`/@${author.username}`}>
             <span>{`@${author.username}`}</span>
           </Link>
-          <span>{` · ${workoutTypeMapper(workout.workoutType)}`}</span>
+          <span>{` · ${workoutTypePrismaToClientMapper(
+            workout.workoutType
+          )}`}</span>
           <Link href={`/workout/${workout.id}`}>
             <span className="font-thin">{` · ${dayjs(
               workout.createdAt

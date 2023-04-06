@@ -11,7 +11,7 @@ import {
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { filterUserForClient } from "~/server/utils/filterUserForClient";
-import type { Workout } from "@prisma/client";
+import type { Workout, WorkoutType } from "@prisma/client";
 
 const addUserDataToWorkouts = async (workouts: Workout[]) => {
   const users = (
@@ -97,6 +97,7 @@ export const workoutsRouter = createTRPCRouter({
             ),
           })
         ),
+        workoutType: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -111,6 +112,7 @@ export const workoutsRouter = createTRPCRouter({
           authorId,
           title: input.title,
           content: input.content,
+          workoutType: input.workoutType as WorkoutType,
         },
       });
 
