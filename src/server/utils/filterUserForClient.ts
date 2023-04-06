@@ -10,7 +10,9 @@ export const filterUserForClient = (user: User) => {
     id: user.id,
     username:
       user.username ??
-      getUsernameFromEmail(user.emailAddresses[0]?.emailAddress ?? ""),
+      getUsernameFromEmail(
+        user.emailAddresses[0]?.emailAddress ?? "unknown user"
+      ),
     profileImageUrl: user.profileImageUrl,
   };
 };

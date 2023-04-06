@@ -8,7 +8,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
+import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { filterUserForClient } from "~/server/utils/filterUserForClient";
 import type { Post } from "@prisma/client";
@@ -23,6 +23,7 @@ const addUserDataToPosts = async (posts: Post[]) => {
 
   return posts.map((post) => {
     const author = users.find((user) => user.id === post.authorId);
+    console.log("author:", author);
 
     if (!author || !author.username)
       throw new TRPCError({
