@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { PageLayout } from "~/components/common/Layout";
-import { CreateWorkoutWizard } from "./CreateWorkoutWizard";
+import CreateWorkoutWizard from "./CreateWorkoutWizard";
 
 export interface Exercise {
   name: string;

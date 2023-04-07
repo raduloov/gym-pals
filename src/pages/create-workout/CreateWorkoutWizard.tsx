@@ -7,10 +7,10 @@ import { Button } from "~/components/common/Button";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 import { workoutTypeClientToPrismaMapper } from "~/mappers/workoutTypeMapper";
 import type { Exercise } from "./WorkoutBuilder";
-import { WorkoutBuilder } from "./WorkoutBuilder";
+import WorkoutBuilder from "./WorkoutBuilder";
 import { useRouter } from "next/router";
 
-export const CreateWorkoutWizard = () => {
+const CreateWorkoutWizard = () => {
   const { user } = useUser();
 
   const router = useRouter();
@@ -111,3 +111,5 @@ export const CreateWorkoutWizard = () => {
     </div>
   );
 };
+
+export default CreateWorkoutWizard;

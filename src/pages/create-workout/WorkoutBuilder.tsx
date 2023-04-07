@@ -19,7 +19,7 @@ interface Props {
   setSelectedWorkoutType: (workoutType: WorkoutTypeClient) => void;
 }
 
-export const WorkoutBuilder = ({
+const WorkoutBuilder = ({
   allExercises,
   selectedExercises,
   setSelectedExercises,
@@ -189,3 +189,5 @@ export const WorkoutBuilder = ({
     </>
   );
 };
+
+export default WorkoutBuilder;
