@@ -103,10 +103,14 @@ export const WorkoutBuilder = ({
       )}
 
       {isSelectingExercises && (
-        <div className="mt-4 flex flex-col rounded-xl border p-4">
+        <div className="h-7/8 absolute top-2 mt-4 h-[90%] w-full flex-col overflow-y-scroll rounded-xl border bg-black p-4 sm:w-96">
+          <div className="flex justify-between pb-2">
+            <input className="w-3/4" />
+            <button onClick={() => setIsSelectingExercises(false)}>X</button>
+          </div>
           {allExercises?.map((exercise) => (
             <div
-              className="cursor-pointer p-1 even:bg-slate-800 hover:opacity-90"
+              className="cursor-pointer p-1 odd:bg-black even:bg-slate-800 hover:opacity-90"
               onClick={() => handleSelectNewExercise(exercise)}
               key={exercise.id}
             >
@@ -116,7 +120,7 @@ export const WorkoutBuilder = ({
         </div>
       )}
 
-      <div className="m-4 flex flex-wrap gap-10">
+      <div className="m-4 flex flex-wrap justify-center gap-10">
         {selectedExercises.map((exercise, exerciseIndex) => (
           <div className="text-xl" key={exercise.name}>
             {`${exerciseIndex + 1}. ${exercise.name}`}
@@ -172,11 +176,11 @@ export const WorkoutBuilder = ({
       </div>
 
       {selectedWorkoutType && !isSelectingExercises && (
-        <div>
+        <div className="flex w-full justify-end">
           <button
-            onClick={() => setIsSelectingExercises((prev) => !prev)}
+            onClick={() => setIsSelectingExercises(true)}
             type="button"
-            className="mb-2 mr-2 rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
+            className="rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
           >
             + Add exercise
           </button>

@@ -8,11 +8,14 @@ import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 import { workoutTypeClientToPrismaMapper } from "~/mappers/workoutTypeMapper";
 import type { Exercise } from "./WorkoutBuilder";
 import { WorkoutBuilder } from "./WorkoutBuilder";
+import { useRouter } from "next/router";
 
 export const CreateWorkoutWizard = () => {
   const { user } = useUser();
 
-  const [title, setTitle] = useState("New workout 💪");
+  const router = useRouter();
+
+  const [title, setTitle] = useState("");
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
   const [selectedWorkoutType, setSelectedWorkoutType] =
     useState<WorkoutTypeClient | null>(null);
@@ -25,6 +28,7 @@ export const CreateWorkoutWizard = () => {
   const { mutate, isLoading: isPosting } = api.workouts.create.useMutation({
     onSuccess: async () => {
       await ctx.workouts.getAll.invalidate();
+      await router.push("/");
       toast.success("Workout posted!");
     },
     onError: (e) => {
@@ -58,8 +62,8 @@ export const CreateWorkoutWizard = () => {
   if (!user) return null; // TODO: Handle this better
 
   return (
-    <>
-      <div className="mb-8 flex w-full gap-3">
+    <div className="flex flex-col items-center justify-center">
+      <div className="fborder mb-8 flex w-full gap-3 rounded-l-full">
         <Image
           src={user.profileImageUrl}
           alt="Profile image"
@@ -68,8 +72,8 @@ export const CreateWorkoutWizard = () => {
           height={56}
         />
         <input
-          placeholder="Workout title"
-          className="grow bg-transparent text-2xl outline-none"
+          placeholder="New workout 💪"
+          className="grow bg-transparent text-2xl"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -83,9 +87,11 @@ export const CreateWorkoutWizard = () => {
             }
           }}
         />
-
-        <Button onClick={handlePostWorkout} label="Post workout" />
       </div>
+
+      {selectedWorkoutType && !selectedExercises.length && (
+        <div className="text-xl">{"Let's get to work! 💪"}</div>
+      )}
 
       {allExercises && (
         <WorkoutBuilder
@@ -96,6 +102,12 @@ export const CreateWorkoutWizard = () => {
           setSelectedWorkoutType={setSelectedWorkoutType}
         />
       )}
-    </>
+
+      {selectedExercises.length > 0 && (
+        <div className="flex w-full justify-end p-1">
+          <Button onClick={handlePostWorkout} label="Post workout" />
+        </div>
+      )}
+    </div>
   );
 };
