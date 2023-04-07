@@ -32,9 +32,9 @@ export const CreateWorkoutWizard = () => {
       toast.success("Workout posted!");
     },
     onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors.content;
-      if (errorMessage && errorMessage[0]) {
-        toast.error(errorMessage[0]);
+      const errorMessage = e.data?.zodError?.fieldErrors;
+      if (errorMessage?.title) {
+        toast.error("Please enter a title.");
       } else {
         toast.error("Failed to post! Please try again later.");
       }
@@ -63,7 +63,7 @@ export const CreateWorkoutWizard = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="fborder mb-8 flex w-full gap-3 rounded-l-full">
+      <div className="mb-8 flex w-full gap-3 rounded-l-full border">
         <Image
           src={user.profileImageUrl}
           alt="Profile image"
@@ -73,7 +73,7 @@ export const CreateWorkoutWizard = () => {
         />
         <input
           placeholder="New workout 💪"
-          className="grow bg-transparent text-2xl"
+          className="grow bg-transparent text-2xl outline-none"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
