@@ -1,6 +1,7 @@
 import type { WeightliftingExcercise } from "@prisma/client";
 import { useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
+import { Button, ButtonSize, ButtonType } from "~/components/common/Button";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 
 export interface Exercise {
@@ -168,7 +169,7 @@ const WorkoutBuilder = ({
                             setIndex
                           )
                         }
-                        inputMode="numeric"
+                        inputMode="decimal"
                         step={0.1}
                         min={0}
                         className="mr-2 h-8 w-12 p-1 text-black"
@@ -186,7 +187,7 @@ const WorkoutBuilder = ({
                             setIndex
                           )
                         }
-                        inputMode="numeric"
+                        inputMode="decimal"
                         step={0.1}
                         min={0}
                         className="mx-2 h-8 w-16 p-1 text-black"
@@ -202,13 +203,12 @@ const WorkoutBuilder = ({
                   ))}
                 </div>
                 <div className="flex">
-                  <button
+                  <Button
+                    label={"+ Add set"}
+                    type={ButtonType.SECONDARY}
+                    size={ButtonSize.SMALL}
                     onClick={() => handleAddSet(exerciseIndex)}
-                    type="button"
-                    className="mb-2 mr-2 rounded-lg border border-blue-700 px-3 py-2 text-center text-xs font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
-                  >
-                    + Add set
-                  </button>
+                  />
                 </div>
               </div>
               <div
@@ -247,21 +247,17 @@ const WorkoutBuilder = ({
       {selectedWorkoutType && !isSelectingExercises && (
         <div className="flex justify-end">
           <div className="flex flex-col gap-1">
-            <button
+            <Button
+              label={"+ Add exercise"}
+              type={ButtonType.SECONDARY}
               onClick={() => setIsSelectingExercises(true)}
-              type="button"
-              className="rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
-            >
-              + Add exercise
-            </button>
+            />
             {!hasAddedBodyWeight && (
-              <button
+              <Button
+                label={"+ Add body weight"}
+                type={ButtonType.SECONDARY}
                 onClick={() => setHasAddedBodyWeight(true)}
-                type="button"
-                className="rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
-              >
-                + Add body weight
-              </button>
+              />
             )}
           </div>
         </div>

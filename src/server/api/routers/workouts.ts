@@ -98,7 +98,7 @@ export const workoutsRouter = createTRPCRouter({
               ),
             })
           ),
-          bodyWeight: z.number().min(1),
+          bodyWeight: z.number(),
         }),
         workoutType: z.string(),
       })
