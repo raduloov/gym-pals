@@ -17,6 +17,8 @@ interface Props {
   setSelectedExercises: (exercises: Exercise[]) => void;
   selectedWorkoutType: WorkoutTypeClient | null;
   setSelectedWorkoutType: (workoutType: WorkoutTypeClient) => void;
+  bodyWeight: number;
+  setBodyWeight: (bodyWeight: number) => void;
 }
 
 const WorkoutBuilder = ({
@@ -25,8 +27,11 @@ const WorkoutBuilder = ({
   setSelectedExercises,
   selectedWorkoutType,
   setSelectedWorkoutType,
+  bodyWeight,
+  setBodyWeight,
 }: Props) => {
   const [isSelectingExercises, setIsSelectingExercises] = useState(false);
+  const [hasAddedBodyWeight, setHasAddedBodyWeight] = useState(false);
 
   const handleAddSet = (exerciseIndex: number) => {
     const currentExercise = selectedExercises[exerciseIndex];
@@ -111,6 +116,11 @@ const WorkoutBuilder = ({
       selectedExercises.filter((_, index) => index !== exerciseIndex)
     );
 
+  const handleRemoveBodyWeight = () => {
+    setBodyWeight(0);
+    setHasAddedBodyWeight(false);
+  };
+
   return (
     <div className="mt-2 max-h-[80%] w-full overflow-y-scroll">
       {!selectedWorkoutType && (
@@ -137,7 +147,7 @@ const WorkoutBuilder = ({
         </div>
       )}
 
-      <div className="m-4 flex flex-wrap justify-center gap-10">
+      <div className="m-4 flex flex-wrap justify-center gap-5">
         {selectedExercises &&
           selectedExercises.map((exercise, exerciseIndex) => (
             <div className="flex items-center" key={exercise.name}>
@@ -158,6 +168,8 @@ const WorkoutBuilder = ({
                             setIndex
                           )
                         }
+                        inputMode="numeric"
+                        step={0.1}
                         min={0}
                         className="mr-2 h-8 w-12 p-1 text-black"
                       />
@@ -174,6 +186,8 @@ const WorkoutBuilder = ({
                             setIndex
                           )
                         }
+                        inputMode="numeric"
+                        step={0.1}
                         min={0}
                         className="mx-2 h-8 w-16 p-1 text-black"
                       />
@@ -205,17 +219,51 @@ const WorkoutBuilder = ({
               </div>
             </div>
           ))}
+
+        {hasAddedBodyWeight && (
+          <div className="flex items-center">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-400 p-4 text-xl">
+              Body weight:
+              <input
+                type="number"
+                placeholder="0"
+                value={bodyWeight}
+                onChange={(e) => setBodyWeight(e.target.valueAsNumber)}
+                min={1}
+                className="h-8 w-12 p-1 text-black"
+              />
+              kg
+            </div>
+            <div
+              onClick={handleRemoveBodyWeight}
+              className="ml-3 flex text-lg text-slate-400"
+            >
+              x
+            </div>
+          </div>
+        )}
       </div>
 
       {selectedWorkoutType && !isSelectingExercises && (
         <div className="flex justify-end">
-          <button
-            onClick={() => setIsSelectingExercises(true)}
-            type="button"
-            className="rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
-          >
-            + Add exercise
-          </button>
+          <div className="flex flex-col gap-1">
+            <button
+              onClick={() => setIsSelectingExercises(true)}
+              type="button"
+              className="rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
+            >
+              + Add exercise
+            </button>
+            {!hasAddedBodyWeight && (
+              <button
+                onClick={() => setHasAddedBodyWeight(true)}
+                type="button"
+                className="rounded-lg border border-blue-700 px-5 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
+              >
+                + Add body weight
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>

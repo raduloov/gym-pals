@@ -19,6 +19,7 @@ const CreateWorkoutWizard = () => {
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
   const [selectedWorkoutType, setSelectedWorkoutType] =
     useState<WorkoutTypeClient | null>(null);
+  const [bodyWeight, setBodyWeight] = useState<number>(0);
 
   const { data: allExercises, isLoading: exercisesLoading } =
     api.exercises.getAll.useQuery();
@@ -53,7 +54,7 @@ const CreateWorkoutWizard = () => {
   const handlePostWorkout = () =>
     mutate({
       title,
-      content: selectedExercises,
+      content: { exercises: selectedExercises, bodyWeight },
       workoutType: workoutTypeClientToPrismaMapper(
         selectedWorkoutType as WorkoutTypeClient
       ),
@@ -100,6 +101,8 @@ const CreateWorkoutWizard = () => {
           setSelectedExercises={setSelectedExercises}
           selectedWorkoutType={selectedWorkoutType}
           setSelectedWorkoutType={setSelectedWorkoutType}
+          bodyWeight={bodyWeight}
+          setBodyWeight={setBodyWeight}
         />
       )}
 

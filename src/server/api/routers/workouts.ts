@@ -86,17 +86,20 @@ export const workoutsRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string().min(1).max(100),
-        content: z.array(
-          z.object({
-            name: z.string(),
-            sets: z.array(
-              z.object({
-                weight: z.number(),
-                reps: z.number(),
-              })
-            ),
-          })
-        ),
+        content: z.object({
+          exercises: z.array(
+            z.object({
+              name: z.string(),
+              sets: z.array(
+                z.object({
+                  weight: z.number(),
+                  reps: z.number(),
+                })
+              ),
+            })
+          ),
+          bodyWeight: z.number().min(1),
+        }),
         workoutType: z.string(),
       })
     )

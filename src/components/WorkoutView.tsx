@@ -12,9 +12,13 @@ dayjs.extend(relativeTime);
 type WorkoutWithUser = RouterOutputs["workouts"]["getAll"][number];
 
 const parseWorkoutContentJSON = (content: Prisma.JsonValue): string => {
-  let parsedContent = "";
+  const { exercises, bodyWeight } = content as unknown as {
+    exercises: Exercise[];
+    bodyWeight: number;
+  };
 
-  for (const exercise of Object.values(content as unknown as Exercise[])) {
+  let parsedContent = "";
+  for (const exercise of Object.values(exercises)) {
     parsedContent += ` - ${exercise.name}:`;
 
     for (const [index, set] of exercise.sets.entries()) {
@@ -26,6 +30,10 @@ const parseWorkoutContentJSON = (content: Prisma.JsonValue): string => {
     }
 
     parsedContent += "\n";
+  }
+
+  if (bodyWeight > 0) {
+    parsedContent += ` --> Body weight: ${bodyWeight}kg`;
   }
 
   return parsedContent;
@@ -44,15 +52,15 @@ export const WorkoutView = (props: WorkoutWithUser) => {
         height={56}
       />
       <div className="flex flex-col">
-        <div className="flex gap-1 text-slate-400">
+        <div className="flex gap-1 whitespace-nowrap text-slate-400">
           <Link href={`/@${author.username}`}>
             <span>{`@${author.username}`}</span>
           </Link>
-          <span>{` · ${workoutTypePrismaToClientMapper(
-            workout.workoutType
-          )}`}</span>
+          <span className="text-slate-400">
+            {` · ${workoutTypePrismaToClientMapper(workout.workoutType)}`}
+          </span>
           <Link href={`/workout/${workout.id}`}>
-            <span className="font-thin">{` · ${dayjs(
+            <span className="whitespace-pre-wrap font-thin">{` · ${dayjs(
               workout.createdAt
             ).fromNow()}`}</span>
           </Link>
