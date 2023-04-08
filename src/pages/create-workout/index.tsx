@@ -18,7 +18,7 @@ const CreateWorkoutPage: NextPage = () => {
         <title>New workout</title>
       </Head>
       <PageLayout>
-        <div className="p-4">
+        <div className="max-h-screen overflow-hidden p-4">
           <CreateWorkoutWizard />
         </div>
       </PageLayout>

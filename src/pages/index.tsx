@@ -5,7 +5,6 @@ import { LoadingPage } from "~/components/common/Loading";
 import { PageLayout } from "~/components/common/Layout";
 import { WorkoutView } from "~/components/WorkoutView";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
 
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.workouts.getAll.useQuery();
@@ -28,11 +27,6 @@ const Home: NextPage = () => {
 
   // Start fetching asap
   api.workouts.getAll.useQuery();
-
-  if (isSignedIn)
-    toast.success("Welcome back!", {
-      id: "welcome-back",
-    });
 
   // Return empty div if user isn't loaded
   if (!userLoaded) return <div />;

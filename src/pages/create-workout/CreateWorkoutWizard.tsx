@@ -62,8 +62,8 @@ const CreateWorkoutWizard = () => {
   if (!user) return null; // TODO: Handle this better
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="mb-8 flex w-full gap-3 rounded-l-full border">
+    <div className="flex h-screen flex-col items-center">
+      <div className="flex w-full gap-3 rounded-l-full border">
         <Image
           src={user.profileImageUrl}
           alt="Profile image"
@@ -90,7 +90,7 @@ const CreateWorkoutWizard = () => {
       </div>
 
       {selectedWorkoutType && !selectedExercises.length && (
-        <div className="text-xl">{"Let's get to work! 💪"}</div>
+        <div className="mt-8 text-xl">{"Let's get to work! 💪"}</div>
       )}
 
       {allExercises && (
@@ -104,7 +104,7 @@ const CreateWorkoutWizard = () => {
       )}
 
       {selectedExercises.length > 0 && (
-        <div className="flex w-full justify-end p-1">
+        <div className="mt-2 flex w-full justify-end p-1">
           <Button onClick={handlePostWorkout} label="Post workout" />
         </div>
       )}
