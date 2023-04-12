@@ -6,7 +6,7 @@ interface Props {
 
 export const WorkoutTypesContainer = ({ onSelect }: Props) => {
   return (
-    <div className="flex flex-col items-center pb-8">
+    <div className="flex flex-col items-center py-8">
       <span className="pb-8 text-xl">Select workout type:</span>
       <div className="flex flex-wrap justify-center">
         <button

@@ -154,16 +154,14 @@ const WorkoutBuilder = ({
 
   if (!selectedWorkoutType) {
     return (
-      <div className="mt-2 max-h-[80%] w-full overflow-y-scroll">
-        <WorkoutTypesContainer
-          onSelect={(workoutType) => setSelectedWorkoutType(workoutType)}
-        />
-      </div>
+      <WorkoutTypesContainer
+        onSelect={(workoutType) => setSelectedWorkoutType(workoutType)}
+      />
     );
   }
 
   return (
-    <>
+    <div className="mt-2 max-h-[80%] w-full overflow-y-scroll">
       {isSelectingExercises && (
         <div className="h-7/8 absolute top-2 mt-4 h-[90%] w-full flex-col overflow-y-scroll rounded-xl border bg-black p-4 sm:w-96">
           <div className="flex justify-between pb-2">
@@ -279,7 +277,7 @@ const WorkoutBuilder = ({
       </div>
 
       {renderButtons()}
-    </>
+    </div>
   );
 };
 

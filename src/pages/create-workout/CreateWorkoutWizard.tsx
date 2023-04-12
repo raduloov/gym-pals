@@ -75,11 +75,12 @@ const CreateWorkoutWizard = () => {
 
   const renderPostButton = (): JSX.Element | undefined => {
     if (
-      (selectedExercises.length > 0 &&
+      selectedWorkoutType !== null &&
+      ((selectedExercises.length > 0 &&
         selectedWorkoutType ===
           workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)) ||
-      selectedWorkoutType !==
-        workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)
+        selectedWorkoutType !==
+          workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING))
     ) {
       return (
         <div className="mt-2 flex w-full justify-end p-1">
@@ -93,7 +94,7 @@ const CreateWorkoutWizard = () => {
 
   return (
     <div className="flex h-screen flex-col items-center">
-      <div className="flex w-full gap-3 rounded-l-full border">
+      <div className="flex w-full gap-2 rounded-l-full border">
         <Image
           src={user.profileImageUrl}
           alt="Profile image"
@@ -103,7 +104,7 @@ const CreateWorkoutWizard = () => {
         />
         <input
           placeholder="New workout 💪"
-          className="grow bg-transparent text-2xl outline-none"
+          className="w-[200%] bg-transparent text-2xl outline-none"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -117,6 +118,11 @@ const CreateWorkoutWizard = () => {
             }
           }}
         />
+        {selectedWorkoutType && (
+          <div className="my-2 mr-2 inline-flex w-full items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-gradient-to-r from-purple-600 to-blue-500 p-0.5 text-xs font-medium text-white dark:text-white dark:focus:ring-blue-800">
+            <span className="rounded-md px-1">{`${selectedWorkoutType}`}</span>
+          </div>
+        )}
       </div>
 
       {renderCTA()}
