@@ -4,15 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
-import type { Prisma } from "@prisma/client";
+import { WorkoutType } from "@prisma/client";
+import type { Workout } from "@prisma/client";
 import type { Exercise } from "~/pages/create-workout";
 
 dayjs.extend(relativeTime);
 
 type WorkoutWithUser = RouterOutputs["workouts"]["getAll"][number];
 
-const parseWorkoutContentJSON = (content: Prisma.JsonValue): string => {
-  const { exercises, bodyWeight } = content as unknown as {
+const parseWorkoutContentJSON = (workout: Workout): string | null => {
+  if (workout.workoutType !== WorkoutType.WEIGHTLIFTING) {
+    return null;
+  }
+
+  const { exercises, bodyWeight } = workout.content as unknown as {
     exercises: Exercise[];
     bodyWeight: number;
   };
@@ -67,7 +72,7 @@ export const WorkoutView = (props: WorkoutWithUser) => {
         </div>
         <span className="text-2xl">{workout.title}</span>
         <span className="whitespace-pre-wrap text-slate-400">
-          {parseWorkoutContentJSON(workout.content)}
+          {parseWorkoutContentJSON(workout)}
         </span>
       </div>
     </div>

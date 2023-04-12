@@ -1,7 +1,9 @@
-import type { WeightliftingExcercise } from "@prisma/client";
+import { WorkoutType } from "@prisma/client";
 import { useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
 import { Button, ButtonSize, ButtonType } from "~/components/common/Button";
+import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
+import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 
 export interface Exercise {
@@ -122,14 +124,46 @@ const WorkoutBuilder = ({
     setHasAddedBodyWeight(false);
   };
 
-  return (
-    <div className="mt-2 max-h-[80%] w-full overflow-y-scroll">
-      {!selectedWorkoutType && (
+  const renderButtons = (): JSX.Element | undefined => {
+    if (
+      selectedWorkoutType &&
+      !isSelectingExercises &&
+      selectedWorkoutType ===
+        workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)
+    ) {
+      return (
+        <div className="flex justify-end">
+          <div className="flex flex-col gap-1">
+            <Button
+              label={"+ Add exercise"}
+              type={ButtonType.SECONDARY}
+              onClick={() => setIsSelectingExercises(true)}
+            />
+            {!hasAddedBodyWeight && (
+              <Button
+                label={"+ Add body weight"}
+                type={ButtonType.SECONDARY}
+                onClick={() => setHasAddedBodyWeight(true)}
+              />
+            )}
+          </div>
+        </div>
+      );
+    }
+  };
+
+  if (!selectedWorkoutType) {
+    return (
+      <div className="mt-2 max-h-[80%] w-full overflow-y-scroll">
         <WorkoutTypesContainer
           onSelect={(workoutType) => setSelectedWorkoutType(workoutType)}
         />
-      )}
+      </div>
+    );
+  }
 
+  return (
+    <>
       {isSelectingExercises && (
         <div className="h-7/8 absolute top-2 mt-4 h-[90%] w-full flex-col overflow-y-scroll rounded-xl border bg-black p-4 sm:w-96">
           <div className="flex justify-between pb-2">
@@ -244,25 +278,8 @@ const WorkoutBuilder = ({
         )}
       </div>
 
-      {selectedWorkoutType && !isSelectingExercises && (
-        <div className="flex justify-end">
-          <div className="flex flex-col gap-1">
-            <Button
-              label={"+ Add exercise"}
-              type={ButtonType.SECONDARY}
-              onClick={() => setIsSelectingExercises(true)}
-            />
-            {!hasAddedBodyWeight && (
-              <Button
-                label={"+ Add body weight"}
-                type={ButtonType.SECONDARY}
-                onClick={() => setHasAddedBodyWeight(true)}
-              />
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+      {renderButtons()}
+    </>
   );
 };
 

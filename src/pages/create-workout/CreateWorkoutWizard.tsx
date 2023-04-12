@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { api } from "~/utils/api";
 import { Button } from "~/components/common/Button";
-import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
+import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import { workoutTypeClientToPrismaMapper } from "~/mappers/workoutTypeMapper";
-import type { Exercise } from "./WorkoutBuilder";
 import WorkoutBuilder from "./WorkoutBuilder";
 import { useRouter } from "next/router";
+import { WorkoutType } from "@prisma/client";
+import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
+import type { Exercise } from "./WorkoutBuilder";
 
 const CreateWorkoutWizard = () => {
   const { user } = useUser();
@@ -60,6 +62,33 @@ const CreateWorkoutWizard = () => {
       ),
     });
 
+  const renderCTA = (): JSX.Element | undefined => {
+    if (
+      selectedWorkoutType &&
+      !selectedExercises.length &&
+      selectedWorkoutType ===
+        workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)
+    ) {
+      return <div className="mt-8 text-xl">{"Let's get to work! 💪"}</div>;
+    }
+  };
+
+  const renderPostButton = (): JSX.Element | undefined => {
+    if (
+      (selectedExercises.length > 0 &&
+        selectedWorkoutType ===
+          workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)) ||
+      selectedWorkoutType !==
+        workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)
+    ) {
+      return (
+        <div className="mt-2 flex w-full justify-end p-1">
+          <Button onClick={handlePostWorkout} label="Post workout" />
+        </div>
+      );
+    }
+  };
+
   if (!user) return null; // TODO: Handle this better
 
   return (
@@ -90,9 +119,7 @@ const CreateWorkoutWizard = () => {
         />
       </div>
 
-      {selectedWorkoutType && !selectedExercises.length && (
-        <div className="mt-8 text-xl">{"Let's get to work! 💪"}</div>
-      )}
+      {renderCTA()}
 
       {allExercises && (
         <WorkoutBuilder
@@ -106,11 +133,7 @@ const CreateWorkoutWizard = () => {
         />
       )}
 
-      {selectedExercises.length > 0 && (
-        <div className="mt-2 flex w-full justify-end p-1">
-          <Button onClick={handlePostWorkout} label="Post workout" />
-        </div>
-      )}
+      {renderPostButton()}
     </div>
   );
 };
