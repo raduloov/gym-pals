@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { WorkoutType } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 import type { Exercise } from "./WorkoutBuilder";
+import { getWorkoutTypeButtonColorScheme } from "~/components/WorkoutTypesContainer";
 
 const CreateWorkoutWizard = () => {
   const { user } = useUser();
@@ -119,8 +120,12 @@ const CreateWorkoutWizard = () => {
           }}
         />
         {selectedWorkoutType && (
-          <div className="my-2 mr-2 inline-flex w-full items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-gradient-to-r from-purple-600 to-blue-500 p-0.5 text-xs font-medium text-white dark:text-white dark:focus:ring-blue-800">
-            <span className="rounded-md px-1">{`${selectedWorkoutType}`}</span>
+          <div
+            className={`${getWorkoutTypeButtonColorScheme(
+              selectedWorkoutType
+            )} my-2 mr-2 inline-flex w-full items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-gradient-to-r p-0.5 text-xs font-medium text-white`}
+          >
+            {selectedWorkoutType}
           </div>
         )}
       </div>
