@@ -14,6 +14,7 @@ interface Props {
   onClick?: () => void;
   type?: ButtonType;
   size?: ButtonSize;
+  style?: string;
 }
 
 const getSize = (size: ButtonSize) => {
@@ -39,15 +40,16 @@ export const Button = ({
   onClick,
   type = defaultValues.type,
   size = defaultValues.size,
+  style,
 }: Props) => {
   switch (type) {
     case ButtonType.PRIMARY:
       return (
         <button
           onClick={onClick}
-          className={`rounded-lg bg-blue-700 px-5 py-2.5 ${getSize(
-            size
-          )} font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+          className={`${getSize(size)} ${
+            style ?? ""
+          } rounded-lg bg-blue-700 px-5 py-2.5 font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
         >
           {label}
         </button>
@@ -56,9 +58,9 @@ export const Button = ({
       return (
         <button
           onClick={onClick}
-          className={`rounded-lg border border-blue-700 px-5 py-2.5 text-center ${getSize(
-            size
-          )} font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800`}
+          className={`${getSize(size)} ${
+            style ?? ""
+          } rounded-lg border border-blue-700 px-5 py-2.5 text-center font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800`}
         >
           {label}
         </button>
@@ -67,9 +69,9 @@ export const Button = ({
       return (
         <button
           onClick={onClick}
-          className={`rounded-lg bg-blue-700 px-5 py-2.5 ${getSize(
-            size
-          )} font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+          className={`${getSize(size)} ${
+            style ?? ""
+          } rounded-lg bg-blue-700 px-5 py-2.5 font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
         >
           {label}
         </button>

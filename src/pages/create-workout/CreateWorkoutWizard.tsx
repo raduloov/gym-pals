@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { api } from "~/utils/api";
-import { Button } from "~/components/common/Button";
+import { Button, ButtonType } from "~/components/common/Button";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import { workoutTypeClientToPrismaMapper } from "~/mappers/workoutTypeMapper";
 import WorkoutBuilder from "./WorkoutBuilder";
@@ -63,7 +63,14 @@ const CreateWorkoutWizard = () => {
       ),
     });
 
-  const renderCTA = (): JSX.Element | undefined => {
+  const handleBack = () => {
+    if (selectedWorkoutType) {
+      return setSelectedWorkoutType(null);
+    }
+    return router.back();
+  };
+
+  const renderCTA = (): JSX.Element | null => {
     if (
       selectedWorkoutType &&
       !selectedExercises.length &&
@@ -72,9 +79,11 @@ const CreateWorkoutWizard = () => {
     ) {
       return <div className="mt-8 text-xl">{"Let's get to work! 💪"}</div>;
     }
+
+    return null;
   };
 
-  const renderPostButton = (): JSX.Element | undefined => {
+  const renderPostButton = (): JSX.Element | null => {
     if (
       selectedWorkoutType !== null &&
       ((selectedExercises.length > 0 &&
@@ -83,12 +92,10 @@ const CreateWorkoutWizard = () => {
         selectedWorkoutType !==
           workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING))
     ) {
-      return (
-        <div className="mt-2 flex w-full justify-end p-1">
-          <Button onClick={handlePostWorkout} label="Post workout" />
-        </div>
-      );
+      return <Button onClick={handlePostWorkout} label="Post workout" />;
     }
+
+    return null;
   };
 
   if (!user) return null; // TODO: Handle this better
@@ -144,7 +151,14 @@ const CreateWorkoutWizard = () => {
         />
       )}
 
-      {renderPostButton()}
+      <div className="mt-2 flex w-full flex-col items-end gap-1 p-1">
+        {renderPostButton()}
+        <Button
+          label={"<= Back"}
+          type={ButtonType.SECONDARY}
+          onClick={handleBack}
+        />
+      </div>
     </div>
   );
 };
