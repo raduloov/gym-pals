@@ -15,8 +15,8 @@ import { getWorkoutTypeButtonColorScheme } from "~/components/WorkoutTypesContai
 
 const CreateWorkoutWizard = () => {
   const { user } = useUser();
-
   const router = useRouter();
+  const ctx = api.useContext();
 
   const [title, setTitle] = useState("");
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
@@ -26,8 +26,6 @@ const CreateWorkoutWizard = () => {
 
   const { data: allExercises, isLoading: exercisesLoading } =
     api.exercises.getAll.useQuery();
-
-  const ctx = api.useContext();
 
   const { mutate, isLoading: isPosting } = api.workouts.create.useMutation({
     onSuccess: async () => {
@@ -67,6 +65,7 @@ const CreateWorkoutWizard = () => {
     if (selectedWorkoutType) {
       return setSelectedWorkoutType(null);
     }
+
     return router.back();
   };
 
@@ -154,7 +153,7 @@ const CreateWorkoutWizard = () => {
       <div className="mt-2 flex w-full flex-col items-end gap-1 p-1">
         {renderPostButton()}
         <Button
-          label={"<= Back"}
+          label={"<- Back"}
           type={ButtonType.SECONDARY}
           onClick={handleBack}
         />

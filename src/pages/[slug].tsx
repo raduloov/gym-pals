@@ -6,6 +6,8 @@ import Image from "next/image";
 import { LoadingPage } from "~/components/common/Loading";
 import { WorkoutView } from "~/components/WorkoutView";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/router";
 
 const ProfileFeed = (props: { userId: string }) => {
   const { data, isLoading } = api.workouts.getWorkoutsByUserId.useQuery({
@@ -26,6 +28,8 @@ const ProfileFeed = (props: { userId: string }) => {
 };
 
 const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
+  const router = useRouter();
+
   const { data } = api.profile.getUserByUsername.useQuery({
     username,
   });
@@ -35,25 +39,39 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   return (
     <>
       <Head>
-        <title>{data.username}</title>
+        <title>Gym-Pals | {data.username}</title>
       </Head>
-      <PageLayout>
-        <div className="relative h-36 border-slate-400 bg-slate-600">
-          <Image
-            src={data.profileImageUrl}
-            alt={`${data.username ?? ""}'s profile pic`}
-            width={128}
-            height={128}
-            className="absolute bottom-0 left-0 -mb-[64px] ml-4 rounded-full border-2 border-black bg-black"
-          />
-        </div>
-        <div className="h-[64px]" />
-        <div className="p-4 text-2xl font-bold">{`@${
-          data.username ?? ""
-        }`}</div>
-        <div className="w-full border-b border-slate-400" />
-        <ProfileFeed userId={data.id} />
-      </PageLayout>
+      <div className="overflow-y-scroll">
+        <PageLayout>
+          <div className="relative h-36 border-slate-400 bg-slate-600">
+            <div className="flex justify-end p-4">
+              <Button
+                auto
+                flat
+                onClick={() => {
+                  router.back();
+                }}
+              >
+                {"<- Back"}
+              </Button>
+            </div>
+            <Image
+              src={data.profileImageUrl}
+              alt={`${data.username ?? ""}'s profile pic`}
+              width={128}
+              height={128}
+              className="absolute bottom-0 left-0 -mb-[64px] ml-4 rounded-full border-2 border-black bg-black"
+            />
+          </div>
+          <div className="h-[64px]" />
+          <div className="p-4 text-2xl font-bold">{`@${
+            data.username ?? ""
+          }`}</div>
+          <div className="w-full border-b border-slate-400" />
+
+          <ProfileFeed userId={data.id} />
+        </PageLayout>
+      </div>
     </>
   );
 };
