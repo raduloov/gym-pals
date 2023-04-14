@@ -12,6 +12,7 @@ import { WorkoutType } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 import type { Exercise } from "./WorkoutBuilder";
 import { getWorkoutTypeButtonColorScheme } from "~/components/WorkoutTypesContainer";
+import { ChevronLeftCircle } from "react-iconly";
 
 const CreateWorkoutWizard = () => {
   const { user } = useUser();
@@ -157,9 +158,13 @@ const CreateWorkoutWizard = () => {
 
         <div className="mt-2 flex h-56 w-full flex-col items-end gap-1 p-1">
           {renderPostButton()}
-          <Button ghost auto onClick={handleBack}>
-            {"<- Back"}
-          </Button>
+          <Button
+            icon={<ChevronLeftCircle set="light" primaryColor="white" />}
+            light
+            auto
+            size="lg"
+            onPress={handleBack}
+          />
         </div>
       </div>
     </div>

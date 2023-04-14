@@ -74,7 +74,7 @@ const Home: NextPage = () => {
                 <Avatar as="button" size="lg" src={user?.profileImageUrl} />
               </Dropdown.Trigger>
               <Dropdown.Menu aria-label="Static Actions">
-                <Dropdown.Item key="profile">
+                <Dropdown.Item textValue="Profile" key="profile">
                   <div
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onClick={async () => {
@@ -84,8 +84,14 @@ const Home: NextPage = () => {
                     Profile
                   </div>
                 </Dropdown.Item>
-                <Dropdown.Item key="settings">Settings</Dropdown.Item>
-                <Dropdown.Item key="Sign out" color="error">
+                <Dropdown.Item textValue="Settings" key="settings">
+                  Settings
+                </Dropdown.Item>
+                <Dropdown.Item
+                  textValue="Sign out"
+                  key="Sign out"
+                  color="error"
+                >
                   <div
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onClick={async () => await signOut()}

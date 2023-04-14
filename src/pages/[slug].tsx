@@ -8,6 +8,7 @@ import { WorkoutView } from "~/components/WorkoutView";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
+import { ChevronLeft, ChevronLeftCircle } from "react-iconly";
 
 const ProfileFeed = (props: { userId: string }) => {
   const { data, isLoading } = api.workouts.getWorkoutsByUserId.useQuery({
@@ -46,14 +47,13 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
           <div className="relative h-36 border-slate-400 bg-slate-600">
             <div className="flex justify-end p-4">
               <Button
+                icon={<ChevronLeftCircle set="light" primaryColor="white" />}
+                light
                 auto
-                flat
-                onClick={() => {
+                onPress={() => {
                   router.back();
                 }}
-              >
-                {"<- Back"}
-              </Button>
+              />
             </div>
             <Image
               src={data.profileImageUrl}
