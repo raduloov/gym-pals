@@ -17,7 +17,7 @@ const Feed = () => {
 
   return (
     // TODO: Fix scrolling issue
-    <div className="flex h-screen flex-col overflow-y-scroll">
+    <div className="h-screen overflow-y-scroll">
       {data.map((fullWorkout) => (
         <WorkoutView {...fullWorkout} key={fullWorkout.workout.id} />
       ))}

@@ -1,7 +1,7 @@
 import { WorkoutType } from "@prisma/client";
 import { useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
-import { Button, ButtonSize, ButtonType } from "~/components/common/Button";
+import { Button, Checkbox, Input, Modal, Row, Text } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
@@ -124,7 +124,7 @@ const WorkoutBuilder = ({
     setHasAddedBodyWeight(false);
   };
 
-  const renderButtons = (): JSX.Element | undefined => {
+  const renderButtons = (): JSX.Element | null => {
     if (
       selectedWorkoutType &&
       !isSelectingExercises &&
@@ -133,23 +133,21 @@ const WorkoutBuilder = ({
     ) {
       return (
         <div className="flex justify-end">
-          <div className="flex flex-col gap-1">
-            <Button
-              label={"+ Add exercise"}
-              type={ButtonType.SECONDARY}
-              onClick={() => setIsSelectingExercises(true)}
-            />
+          <div className="flex flex-col gap-1 p-1">
+            <Button flat onClick={() => setIsSelectingExercises(true)}>
+              + Add exercise
+            </Button>
             {!hasAddedBodyWeight && (
-              <Button
-                label={"+ Add body weight"}
-                type={ButtonType.SECONDARY}
-                onClick={() => setHasAddedBodyWeight(true)}
-              />
+              <Button flat onClick={() => setHasAddedBodyWeight(true)}>
+                + Add body weight
+              </Button>
             )}
           </div>
         </div>
       );
     }
+
+    return null;
   };
 
   if (!selectedWorkoutType) {
@@ -161,24 +159,43 @@ const WorkoutBuilder = ({
   }
 
   return (
-    <div className="mt-2 max-h-[75%] w-full overflow-y-scroll">
-      {isSelectingExercises && (
-        <div className="h-7/8 absolute top-2 mt-4 h-[90%] w-full flex-col overflow-y-scroll rounded-xl border bg-black p-4 sm:w-96">
-          <div className="flex justify-between pb-2">
-            <input className="w-3/4" />
-            <button onClick={() => setIsSelectingExercises(false)}>X</button>
+    <div className="mt-2 w-full">
+      <Modal
+        closeButton
+        blur
+        open={isSelectingExercises}
+        onClose={() => setIsSelectingExercises(false)}
+      >
+        <Modal.Header>
+          <Text id="modal-title" size={18}>
+            Choose your next exercise
+          </Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Input placeholder="Search for an exercise" />
+          <div className="h-[350px] overflow-y-auto">
+            {allExercises?.map((exercise) => (
+              <div
+                className="cursor-pointer p-1"
+                onClick={() => handleAddExercise(exercise)}
+                key={exercise.id}
+              >
+                {exercise.title}
+              </div>
+            ))}
           </div>
-          {allExercises?.map((exercise) => (
-            <div
-              className="cursor-pointer p-1 odd:bg-black even:bg-slate-800 hover:opacity-90"
-              onClick={() => handleAddExercise(exercise)}
-              key={exercise.id}
-            >
-              {exercise.title}
-            </div>
-          ))}
-        </div>
-      )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            auto
+            flat
+            color="error"
+            onPress={() => setIsSelectingExercises(false)}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <div className="m-4 flex flex-wrap justify-center gap-5">
         {selectedExercises &&
@@ -236,11 +253,13 @@ const WorkoutBuilder = ({
                 </div>
                 <div className="flex">
                   <Button
-                    label={"+ Add set"}
-                    type={ButtonType.SECONDARY}
-                    size={ButtonSize.SMALL}
+                    auto
+                    ghost
+                    size="sm"
                     onClick={() => handleAddSet(exerciseIndex)}
-                  />
+                  >
+                    + Add set
+                  </Button>
                 </div>
               </div>
               <div

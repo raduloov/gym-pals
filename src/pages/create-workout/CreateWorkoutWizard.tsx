@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { api } from "~/utils/api";
-import { Button, ButtonType } from "~/components/common/Button";
+import { Button } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import { workoutTypeClientToPrismaMapper } from "~/mappers/workoutTypeMapper";
 import WorkoutBuilder from "./WorkoutBuilder";
@@ -76,7 +76,11 @@ const CreateWorkoutWizard = () => {
       selectedWorkoutType ===
         workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)
     ) {
-      return <div className="mt-8 text-xl">{"Let's get to work! 💪"}</div>;
+      return (
+        <div className="mt-8 flex w-full justify-center text-xl">
+          {"Let's get to work! 💪"}
+        </div>
+      );
     }
 
     return null;
@@ -91,7 +95,7 @@ const CreateWorkoutWizard = () => {
         selectedWorkoutType !==
           workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING))
     ) {
-      return <Button onClick={handlePostWorkout} label="Post workout" />;
+      return <Button onClick={handlePostWorkout}>Post workout</Button>;
     }
 
     return null;
@@ -136,27 +140,27 @@ const CreateWorkoutWizard = () => {
         )}
       </div>
 
-      {renderCTA()}
+      <div className="w-full overflow-y-auto">
+        {renderCTA()}
 
-      {allExercises && (
-        <WorkoutBuilder
-          allExercises={allExercises}
-          selectedExercises={selectedExercises}
-          setSelectedExercises={setSelectedExercises}
-          selectedWorkoutType={selectedWorkoutType}
-          setSelectedWorkoutType={setSelectedWorkoutType}
-          bodyWeight={bodyWeight}
-          setBodyWeight={setBodyWeight}
-        />
-      )}
+        {allExercises && (
+          <WorkoutBuilder
+            allExercises={allExercises}
+            selectedExercises={selectedExercises}
+            setSelectedExercises={setSelectedExercises}
+            selectedWorkoutType={selectedWorkoutType}
+            setSelectedWorkoutType={setSelectedWorkoutType}
+            bodyWeight={bodyWeight}
+            setBodyWeight={setBodyWeight}
+          />
+        )}
 
-      <div className="mt-2 flex w-full flex-col items-end gap-1 p-1">
-        {renderPostButton()}
-        <Button
-          label={"<- Back"}
-          type={ButtonType.SECONDARY}
-          onClick={handleBack}
-        />
+        <div className="mt-2 flex h-56 w-full flex-col items-end gap-1 p-1">
+          {renderPostButton()}
+          <Button ghost auto onClick={handleBack}>
+            {"<- Back"}
+          </Button>
+        </div>
       </div>
     </div>
   );
