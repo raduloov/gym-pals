@@ -5,7 +5,7 @@ import { LoadingPage } from "~/components/common/Loading";
 import { PageLayout } from "~/components/common/Layout";
 import { WorkoutView } from "~/components/WorkoutView";
 import Link from "next/link";
-import { Avatar, Dropdown, Button } from "@nextui-org/react";
+import { Avatar, Dropdown, Button, Text } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 const Feed = () => {
@@ -21,6 +21,9 @@ const Feed = () => {
       {data.map((fullWorkout) => (
         <WorkoutView {...fullWorkout} key={fullWorkout.workout.id} />
       ))}
+      <div className="flex h-44 justify-center pt-10 text-slate-400">
+        You have reached the very end
+      </div>
     </div>
   );
 };
