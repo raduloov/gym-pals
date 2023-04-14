@@ -205,41 +205,46 @@ const WorkoutBuilder = ({
                 {`${exerciseIndex + 1}. ${exercise.name}`}
                 <div className="my-1 flex flex-col">
                   {exercise.sets.map((set, setIndex) => (
-                    <div className="my-1 flex" key={setIndex}>
-                      <input
+                    <div
+                      className="my-1 flex items-center gap-1"
+                      key={setIndex}
+                    >
+                      <Input
+                        width="80px"
                         type="number"
+                        step={0.1}
+                        min={0}
+                        animated={false}
                         placeholder="0"
                         value={set.reps}
+                        style={{ fontSize: 22 }}
                         onChange={(e) =>
                           handleRepsChange(
-                            e.target.valueAsNumber,
+                            parseFloat(e.target.value),
                             set,
                             exerciseIndex,
                             setIndex
                           )
                         }
-                        inputMode="decimal"
-                        step={0.1}
-                        min={0}
-                        className="mr-2 h-8 w-12 p-1 text-black"
                       />
                       reps @
-                      <input
+                      <Input
+                        width="80px"
                         type="number"
+                        step={0.1}
+                        min={0}
+                        animated={false}
                         placeholder="0"
                         value={set.weight}
+                        style={{ fontSize: 22 }}
                         onChange={(e) =>
                           handleWeightChange(
-                            e.target.valueAsNumber,
+                            parseFloat(e.target.value),
                             set,
                             exerciseIndex,
                             setIndex
                           )
                         }
-                        inputMode="decimal"
-                        step={0.1}
-                        min={0}
-                        className="mx-2 h-8 w-16 p-1 text-black"
                       />
                       kg
                       <div
