@@ -5,8 +5,9 @@ import { LoadingPage } from "~/components/common/Loading";
 import { PageLayout } from "~/components/common/Layout";
 import { WorkoutView } from "~/components/WorkoutView";
 import Link from "next/link";
-import { Avatar, Dropdown, Button, Text } from "@nextui-org/react";
+import { Avatar, Dropdown, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
+import { Logout, Setting, User } from "react-iconly";
 
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.workouts.getAll.useQuery();
@@ -16,7 +17,6 @@ const Feed = () => {
   if (!data) return <div>Something went wrong</div>;
 
   return (
-    // TODO: Fix scrolling issue
     <div className="h-screen overflow-y-auto">
       {data.map((fullWorkout) => (
         <WorkoutView {...fullWorkout} key={fullWorkout.workout.id} />
@@ -77,7 +77,11 @@ const Home: NextPage = () => {
                 <Avatar as="button" size="lg" src={user?.profileImageUrl} />
               </Dropdown.Trigger>
               <Dropdown.Menu aria-label="Static Actions">
-                <Dropdown.Item textValue="Profile" key="profile">
+                <Dropdown.Item
+                  icon={<User set="bold" />}
+                  textValue="Profile"
+                  key="profile"
+                >
                   <div
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onClick={async () => {
@@ -87,10 +91,15 @@ const Home: NextPage = () => {
                     Profile
                   </div>
                 </Dropdown.Item>
-                <Dropdown.Item textValue="Settings" key="settings">
+                <Dropdown.Item
+                  icon={<Setting set="bold" />}
+                  textValue="Settings"
+                  key="settings"
+                >
                   Settings
                 </Dropdown.Item>
                 <Dropdown.Item
+                  icon={<Logout set="light" />}
                   textValue="Sign out"
                   key="Sign out"
                   color="error"
