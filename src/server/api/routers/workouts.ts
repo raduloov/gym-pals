@@ -59,6 +59,7 @@ export const workoutsRouter = createTRPCRouter({
 
       return (await addUserDataToWorkouts([workout]))[0];
     }),
+
   getAll: publicProcedure.query(async ({ ctx }) => {
     const workouts = await ctx.prisma.workout.findMany({
       take: 100,

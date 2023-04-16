@@ -1,51 +1,66 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-  relationMode = "prisma"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-model Workout {
-    id          String           @id @default(cuid())
-    createdAt   DateTime         @default(now())
-    title       String?          @db.Text
-    workoutType WorkoutType      @default(WEIGHTLIFTING)
-    content     Json?            @db.Json
-    likes       Int              @default(0)
-    authorId    String
-    comments    Comment[]
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
 
-    @@index([authorId])
+model Workout {
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  title       String?     @db.Text
+  workoutType WorkoutType @default(WEIGHTLIFTING)
+  content     Json?
+  authorId    String
+  upvotes     Upvote[]
+  comments    Comment[]
+
+  @@index([authorId])
+}
+
+model Upvote {
+  id        String   @id @default(cuid())
+  authorId  String
+  workoutId String
+  workout   Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@index([workoutId])
 }
 
 model Comment {
-    id          String           @id @default(cuid())
-    createdAt   DateTime         @default(now())
-    content     String           @db.Text
-    likes       Int              @default(0)
-    authorId    String      
-    workoutId   String      
-    workout     Workout          @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String   @db.Text
+  likes     Int      @default(0)
+  authorId  String
+  workoutId String
+  workout   Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
 
-    @@index([workoutId])
+  @@index([workoutId])
 }
 
 model WeightliftingExcercise {
-    id          Int              @id @default(autoincrement())
-    title       String           @db.Text
+  id    Int    @id @default(autoincrement())
+  title String @db.Text
+}
+
+model Like {
+  id        String   @id
+  createdAt DateTime @default(now())
+  workoutId String
+  authorId  String
+
+  @@index([workoutId])
 }
 
 enum WorkoutType {
-    WEIGHTLIFTING
-    COMBAT_SPORTS
-    WATER_SPORTS
-    WINTER_SPORTS
-    CARDIO
-    OTHER
+  WEIGHTLIFTING
+  COMBAT_SPORTS
+  WATER_SPORTS
+  WINTER_SPORTS
+  CARDIO
+  OTHER
 }

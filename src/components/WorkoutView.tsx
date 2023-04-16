@@ -1,4 +1,4 @@
-import type { RouterOutputs } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import type { Workout } from "@prisma/client";
 import type { Exercise } from "~/pages/create-workout";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
-import { Chat, Heart, Send } from "react-iconly";
+import { Chat, Heart } from "react-iconly";
 
 dayjs.extend(relativeTime);
 
@@ -50,7 +50,29 @@ const parseWorkoutContentJSON = (workout: Workout): string | null => {
 export const WorkoutView = (props: WorkoutWithUser) => {
   const [isLiked, setIsLiked] = useState(false);
 
+  const { data } = api.upvotes.getUpvotesForWorkout.useQuery({
+    workoutId: props.workout.id,
+  });
+
   const { workout, author } = props;
+
+  const { mutate } = api.upvotes.createUpvoteForWorkout.useMutation({
+    // onSuccess: async () => {
+    //   await ctx.workouts.getAll.invalidate();
+    //   await router.push("/");
+    //   toast.success("Workout posted!");
+    // },
+    // onError: (e) => {
+    //   const errorMessage = e.data?.zodError?.fieldErrors;
+    //   if (errorMessage?.title) {
+    //     toast.error("Please enter a title.");
+    //   } else {
+    //     toast.error("Failed to post! Please try again later.");
+    //   }
+    // },
+  });
+
+  console.log("upvotes:", data);
 
   return (
     <div
@@ -86,7 +108,7 @@ export const WorkoutView = (props: WorkoutWithUser) => {
         </div>
       </div>
 
-      <Button.Group style={{ width: "100%" }} color="WHITE" light>
+      <Button.Group style={{ width: "100%" }} color="white" light>
         <Button
           icon={
             isLiked ? (
@@ -98,6 +120,8 @@ export const WorkoutView = (props: WorkoutWithUser) => {
           style={{ width: "100%" }}
           onPress={() => {
             setIsLiked(!isLiked);
+            mutate({ workoutId: workout.id });
+            console.log("workout id:", workout.id);
           }}
         >
           Like
