@@ -8,7 +8,7 @@ export const profileRouter = createTRPCRouter({
   getCurrentUser: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.userId) return null;
 
-    const user = await clerkClient.users.getUser(ctx.userId ?? "");
+    const user = await clerkClient.users.getUser(ctx.userId);
 
     return filterUserForClient(user);
   }),

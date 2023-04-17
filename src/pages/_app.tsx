@@ -7,17 +7,16 @@ import Head from "next/head";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <>
+    <ClerkProvider {...pageProps}>
       <Head>
         <title>Gym-Pals</title>
         <meta name="description" content="💪" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ClerkProvider {...pageProps}>
-        <Toaster position="bottom-center" />
-        <Component {...pageProps} />
-      </ClerkProvider>
-    </>
+
+      <Toaster position="bottom-center" />
+      <Component {...pageProps} />
+    </ClerkProvider>
   );
 };
 

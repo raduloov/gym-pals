@@ -29,7 +29,7 @@ const Feed = () => {
 };
 
 const Home: NextPage = () => {
-  const { isLoaded: userLoaded, isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const ctx = api.useContext();
   const router = useRouter();
   const { signOut } = useClerk();
@@ -37,10 +37,10 @@ const Home: NextPage = () => {
   // Start fetching asap
   api.workouts.getAll.useQuery();
 
-  const { data: user } = api.profile.getCurrentUser.useQuery();
+  // const { data: user, isLoading } = api.profile.getCurrentUser.useQuery();
 
   // Return empty div if user isn't loaded
-  if (!userLoaded) return <div />; // TODO: Handle this better
+  if (!user) return <div />; // TODO: Handle this better
 
   return (
     <PageLayout>
@@ -64,7 +64,7 @@ const Home: NextPage = () => {
             </SignInButton>
           </div>
         )}
-        {isSignedIn && user && (
+        {isSignedIn && (
           <div className="flex items-center gap-2 px-2">
             <Link href={"/create-workout"}>
               <Button ghost auto>
@@ -85,7 +85,7 @@ const Home: NextPage = () => {
                   <div
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onClick={async () => {
-                      await router.push(`/@${user.username}`);
+                      await router.push(`/@${user?.username ?? ""}`);
                     }}
                   >
                     Profile

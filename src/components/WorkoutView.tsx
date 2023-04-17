@@ -10,6 +10,7 @@ import type { Exercise } from "~/pages/create-workout";
 import { Avatar, Button, Loading } from "@nextui-org/react";
 import { Chat, Heart } from "react-iconly";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "react-hot-toast";
 
 dayjs.extend(relativeTime);
 
@@ -65,14 +66,11 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
         workoutId: workout.id,
       });
     },
-    // onError: (e) => {
-    //   const errorMessage = e.data?.zodError?.fieldErrors;
-    //   if (errorMessage?.title) {
-    //     toast.error("Please enter a title.");
-    //   } else {
-    //     toast.error("Failed to post! Please try again later.");
-    //   }
-    // },
+    onError: (e) => {
+      if (e.message === "UNAUTHORIZED") {
+        toast.error("Please sign in to like a workout.");
+      }
+    },
   });
 
   return (
@@ -127,7 +125,7 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
         >
           Like
         </Button>
-        <Button icon={<Chat set="curved" />} style={{ width: "100%" }}>
+        <Button disabled icon={<Chat set="curved" />} style={{ width: "100%" }}>
           Comment
         </Button>
       </Button.Group>
