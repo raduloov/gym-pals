@@ -134,7 +134,7 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
 
       <div className="w-full0 flex px-4 py-2">
         {upvotes && upvotes.length > 0 && `Liked by ${upvotes?.length ?? ""}`}
-        <Avatar.Group className="ml-4">
+        <Avatar.Group animated={false} className="ml-4">
           {upvotes?.map((upvote, index) => (
             <Avatar
               key={index}
