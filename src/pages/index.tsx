@@ -40,7 +40,7 @@ const Home: NextPage = () => {
   // const { data: user, isLoading } = api.profile.getCurrentUser.useQuery();
 
   // Return empty div if user isn't loaded
-  if (!user) return <div />; // TODO: Handle this better
+  // if (!user) return <div />; // TODO: Handle this better
 
   return (
     <PageLayout>
