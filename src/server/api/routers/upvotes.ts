@@ -1,3 +1,5 @@
+import { clerkClient } from "@clerk/nextjs/server";
+import type { Upvote } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
@@ -5,6 +7,34 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { filterUserForClient } from "~/server/utils/filterUserForClient";
+
+const addUserDataToUpvote = async (upvotes: Upvote[]) => {
+  const users = (
+    await clerkClient.users.getUserList({
+      userId: upvotes.map((upvote) => upvote.authorId),
+      limit: 100,
+    })
+  ).map(filterUserForClient);
+
+  return upvotes.map((upvote) => {
+    const author = users.find((user) => user.id === upvote.authorId);
+
+    if (!author)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Author for upvote not found",
+      });
+
+    return {
+      upvote,
+      author: {
+        ...author,
+        username: author.username,
+      },
+    };
+  });
+};
 
 export const upvotesRouter = createTRPCRouter({
   getUpvotesForWorkout: publicProcedure
@@ -14,7 +44,7 @@ export const upvotesRouter = createTRPCRouter({
         where: { workoutId: input.workoutId },
       });
 
-      return upvotes;
+      return addUserDataToUpvote(upvotes);
     }),
 
   createUpvoteForWorkout: privateProcedure
@@ -24,13 +54,29 @@ export const upvotesRouter = createTRPCRouter({
         where: { id: input.workoutId },
       });
 
-      if (!workout)
+      if (!workout) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Workout not found",
         });
+      }
 
-      const upvote = await ctx.prisma.upvote.create({
+      const isUpvoted = await ctx.prisma.upvote.findFirst({
+        where: {
+          workoutId: input.workoutId,
+          authorId: ctx.userId,
+        },
+      });
+
+      if (isUpvoted) {
+        return await ctx.prisma.upvote.delete({
+          where: {
+            id: isUpvoted.id,
+          },
+        });
+      }
+
+      return await ctx.prisma.upvote.create({
         data: {
           workout: {
             connect: { id: input.workoutId },
@@ -38,7 +84,5 @@ export const upvotesRouter = createTRPCRouter({
           authorId: ctx.userId,
         },
       });
-
-      console.log("upvote", upvote);
     }),
 });

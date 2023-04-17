@@ -7,9 +7,9 @@ import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import { WorkoutType } from "@prisma/client";
 import type { Workout } from "@prisma/client";
 import type { Exercise } from "~/pages/create-workout";
-import { Button } from "@nextui-org/react";
-import { useState } from "react";
+import { Avatar, Button, Loading } from "@nextui-org/react";
 import { Chat, Heart } from "react-iconly";
+import { useUser } from "@clerk/nextjs";
 
 dayjs.extend(relativeTime);
 
@@ -47,21 +47,24 @@ const parseWorkoutContentJSON = (workout: Workout): string | null => {
   return parsedContent;
 };
 
-export const WorkoutView = (props: WorkoutWithUser) => {
-  const [isLiked, setIsLiked] = useState(false);
+export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
+  const { user } = useUser();
+  const ctx = api.useContext();
 
-  const { data } = api.upvotes.getUpvotesForWorkout.useQuery({
-    workoutId: props.workout.id,
+  const { data: upvotes } = api.upvotes.getUpvotesForWorkout.useQuery({
+    workoutId: workout.id,
   });
 
-  const { workout, author } = props;
+  const userHasUpvoted = upvotes?.some(
+    (upvote) => upvote.author.id === user?.id
+  );
 
-  const { mutate } = api.upvotes.createUpvoteForWorkout.useMutation({
-    // onSuccess: async () => {
-    //   await ctx.workouts.getAll.invalidate();
-    //   await router.push("/");
-    //   toast.success("Workout posted!");
-    // },
+  const { mutate, isLoading } = api.upvotes.createUpvoteForWorkout.useMutation({
+    onSuccess: async () => {
+      await ctx.upvotes.getUpvotesForWorkout.invalidate({
+        workoutId: workout.id,
+      });
+    },
     // onError: (e) => {
     //   const errorMessage = e.data?.zodError?.fieldErrors;
     //   if (errorMessage?.title) {
@@ -71,8 +74,6 @@ export const WorkoutView = (props: WorkoutWithUser) => {
     //   }
     // },
   });
-
-  console.log("upvotes:", data);
 
   return (
     <div
@@ -111,7 +112,9 @@ export const WorkoutView = (props: WorkoutWithUser) => {
       <Button.Group style={{ width: "100%" }} color="white" light>
         <Button
           icon={
-            isLiked ? (
+            isLoading ? (
+              <Loading type="spinner" />
+            ) : userHasUpvoted ? (
               <Heart set="bold" primaryColor="red" />
             ) : (
               <Heart set="light" primaryColor="red" />
@@ -119,9 +122,7 @@ export const WorkoutView = (props: WorkoutWithUser) => {
           }
           style={{ width: "100%" }}
           onPress={() => {
-            setIsLiked(!isLiked);
             mutate({ workoutId: workout.id });
-            console.log("workout id:", workout.id);
           }}
         >
           Like
@@ -130,6 +131,21 @@ export const WorkoutView = (props: WorkoutWithUser) => {
           Comment
         </Button>
       </Button.Group>
+
+      <div className="w-full0 flex px-4 py-2">
+        {upvotes && upvotes.length > 0 && `Liked by ${upvotes?.length ?? ""}`}
+        <Avatar.Group className="ml-4">
+          {upvotes?.map((upvote, index) => (
+            <Avatar
+              key={index}
+              size="sm"
+              pointer
+              src={upvote.author.profileImageUrl}
+              stacked
+            />
+          ))}
+        </Avatar.Group>
+      </div>
     </div>
   );
 };

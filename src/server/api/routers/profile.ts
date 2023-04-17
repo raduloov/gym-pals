@@ -12,6 +12,7 @@ export const profileRouter = createTRPCRouter({
 
     return filterUserForClient(user);
   }),
+
   getUserByUsername: publicProcedure
     .input(z.object({ username: z.string() }))
     .query(async ({ input }) => {

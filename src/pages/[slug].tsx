@@ -8,7 +8,7 @@ import { WorkoutView } from "~/components/WorkoutView";
 import { generateSSGHelper } from "~/server/utils/ssgHelper";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
-import { ChevronLeft, ChevronLeftCircle } from "react-iconly";
+import { ChevronLeftCircle } from "react-iconly";
 
 const ProfileFeed = (props: { userId: string }) => {
   const { data, isLoading } = api.workouts.getWorkoutsByUserId.useQuery({
