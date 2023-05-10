@@ -50,9 +50,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
                 icon={<ChevronLeftCircle set="light" primaryColor="white" />}
                 light
                 auto
-                onPress={() => {
-                  router.back();
-                }}
+                onPress={() => router.back()}
               />
             </div>
             <Image
@@ -63,10 +61,39 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
               className="absolute bottom-0 left-0 -mb-[64px] ml-4 rounded-full border-2 border-black bg-black"
             />
           </div>
-          <div className="h-[64px]" />
-          <div className="p-4 text-2xl font-bold">{`@${
-            data.username ?? ""
-          }`}</div>
+          <div>
+            <div className="flex justify-between">
+              <div className="mt-16 p-4 text-2xl font-bold">{`@${
+                data.username ?? ""
+              }`}</div>
+              <div className="flex w-full flex-col justify-between py-4">
+                <div className="flex w-full justify-between px-2">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-xs text-slate-400">Workouts done</div>
+                    <div>10</div>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-xs text-slate-400">
+                      Favorite exercise
+                    </div>
+                    <div>Benchpress</div>
+                  </div>
+                </div>
+                <div className="flex w-full justify-between px-2">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-xs text-slate-400">Favorite type</div>
+                    <div>Weightlifting</div>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-xs text-slate-400">
+                      Favorite exercise
+                    </div>
+                    <div>Benchpress</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="w-full border-b border-slate-400" />
 
           <ProfileFeed userId={data.id} />

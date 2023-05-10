@@ -210,7 +210,7 @@ const WorkoutBuilder = ({
                       key={setIndex}
                     >
                       <Input
-                        width="80px"
+                        width="60px"
                         type="number"
                         step={0.1}
                         min={0}
@@ -280,13 +280,16 @@ const WorkoutBuilder = ({
           <div className="flex items-center">
             <div className="flex items-center gap-2 rounded-xl border border-slate-400 p-4 text-xl">
               Body weight:
-              <input
+              <Input
+                width="80px"
                 type="number"
+                step={0.1}
+                min={1}
+                animated={false}
                 placeholder="0"
                 value={bodyWeight}
-                onChange={(e) => setBodyWeight(e.target.valueAsNumber)}
-                min={1}
-                className="h-8 w-12 p-1 text-black"
+                style={{ fontSize: 22 }}
+                onChange={(e) => setBodyWeight(parseFloat(e.target.value))}
               />
               kg
             </div>
