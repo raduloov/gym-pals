@@ -1,7 +1,7 @@
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import { api } from "~/utils/api";
-import { LoadingPage } from "~/components/common/Loading";
+import { Loading } from "@nextui-org/react";
 import { PageLayout } from "~/components/common/Layout";
 import { WorkoutView } from "~/components/WorkoutView";
 import Link from "next/link";
@@ -12,7 +12,12 @@ import { Logout, Setting, User } from "react-iconly";
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.workouts.getAll.useQuery();
 
-  if (postsLoading) return <LoadingPage />;
+  if (postsLoading)
+    return (
+      <div className="absolute right-0 top-0 flex h-screen w-screen items-center justify-center">
+        <Loading type="spinner" size="xl" />
+      </div>
+    );
 
   if (!data) return <div>Something went wrong</div>;
 
