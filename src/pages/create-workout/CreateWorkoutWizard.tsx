@@ -56,7 +56,7 @@ const CreateWorkoutWizard = () => {
   const handlePostWorkout = () =>
     mutate({
       title,
-      content: { exercises: selectedExercises, bodyWeight },
+      content: { exercises: selectedExercises, bodyWeight: 0 },
       workoutType: workoutTypeClientToPrismaMapper(
         selectedWorkoutType as WorkoutTypeClient
       ),

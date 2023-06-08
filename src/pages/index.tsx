@@ -14,7 +14,7 @@ const Feed = () => {
 
   if (postsLoading)
     return (
-      <div className="absolute right-0 top-0 flex h-screen w-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center">
         <Loading type="spinner" size="xl" />
       </div>
     );

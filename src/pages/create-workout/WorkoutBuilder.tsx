@@ -1,7 +1,7 @@
 import { WorkoutType } from "@prisma/client";
 import { useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
-import { Button, Checkbox, Input, Modal, Row, Text } from "@nextui-org/react";
+import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
@@ -104,6 +104,19 @@ const WorkoutBuilder = ({
     const selectedExercise: Exercise = {
       name: exercise.title,
       sets: [
+        // Add 4 sets by default
+        {
+          weight: 0,
+          reps: 0,
+        },
+        {
+          weight: 0,
+          reps: 0,
+        },
+        {
+          weight: 0,
+          reps: 0,
+        },
         {
           weight: 0,
           reps: 0,
@@ -289,7 +302,7 @@ const WorkoutBuilder = ({
                 placeholder="0"
                 value={bodyWeight}
                 style={{ fontSize: 22 }}
-                onChange={(e) => setBodyWeight(parseFloat(e.target.value))}
+                onChange={(e) => setBodyWeight(Number(e.target.value))}
               />
               kg
             </div>
