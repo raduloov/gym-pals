@@ -160,11 +160,15 @@ const CreateWorkoutWizard = () => {
           {renderPostButton()}
           <Button
             icon={<ChevronLeftCircle set="light" primaryColor="white" />}
+            // @ts-ignore
+            color={"white"}
             light
             auto
             size="lg"
             onPress={handleBack}
-          />
+          >
+            Go back
+          </Button>
         </div>
       </div>
     </div>

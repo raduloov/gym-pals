@@ -5,6 +5,7 @@ import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
+import { CloseSquare } from "react-iconly";
 
 export interface Exercise {
   name: string;
@@ -138,12 +139,13 @@ const WorkoutBuilder = ({
   };
 
   const renderButtons = (): JSX.Element | null => {
-    if (
+    const shouldRenderButtons =
       selectedWorkoutType &&
       !isSelectingExercises &&
       selectedWorkoutType ===
-        workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING)
-    ) {
+        workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING);
+
+    if (shouldRenderButtons) {
       return (
         <div className="flex justify-end">
           <div className="flex flex-col gap-1 p-1">
@@ -262,9 +264,9 @@ const WorkoutBuilder = ({
                       kg
                       <div
                         onClick={() => handleRemoveSet(exerciseIndex, setIndex)}
-                        className="ml-3 flex text-sm text-slate-400"
+                        className="ml-3 flex cursor-pointer text-sm text-slate-400"
                       >
-                        x
+                        <CloseSquare set="curved" size={20} />
                       </div>
                     </div>
                   ))}
@@ -282,9 +284,9 @@ const WorkoutBuilder = ({
               </div>
               <div
                 onClick={() => handleRemoveExercise(exerciseIndex)}
-                className="ml-3 flex text-lg text-slate-400"
+                className="ml-3 flex cursor-pointer text-lg text-slate-400"
               >
-                x
+                <CloseSquare set="curved" />
               </div>
             </div>
           ))}
@@ -308,9 +310,9 @@ const WorkoutBuilder = ({
             </div>
             <div
               onClick={handleRemoveBodyWeight}
-              className="ml-3 flex text-lg text-slate-400"
+              className="ml-3 flex cursor-pointer text-lg text-slate-400"
             >
-              x
+              <CloseSquare set="curved" />
             </div>
           </div>
         )}
