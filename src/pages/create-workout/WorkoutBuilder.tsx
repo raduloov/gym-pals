@@ -118,22 +118,22 @@ const WorkoutBuilder = ({
   };
 
   const handleRepsChange = (
-    value: number,
+    value: string,
     set: { weight: number; reps: number },
     exerciseIndex: number,
     setIndex: number
   ) => {
-    set.reps = value;
+    set.reps = Number(value);
     handleInputsChange(set, exerciseIndex, setIndex);
   };
 
   const handleWeightChange = (
-    value: number,
+    value: string,
     set: { weight: number; reps: number },
     exerciseIndex: number,
     setIndex: number
   ) => {
-    set.weight = value;
+    set.weight = Number(value);
     handleInputsChange(set, exerciseIndex, setIndex);
   };
 
@@ -239,7 +239,7 @@ const WorkoutBuilder = ({
                         value={set.reps}
                         onChange={(e) =>
                           handleRepsChange(
-                            Number(e.target.value),
+                            e.target.value,
                             set,
                             exerciseIndex,
                             setIndex
@@ -257,7 +257,7 @@ const WorkoutBuilder = ({
                         value={set.weight}
                         onChange={(e) =>
                           handleWeightChange(
-                            Number(e.target.value),
+                            e.target.value,
                             set,
                             exerciseIndex,
                             setIndex
