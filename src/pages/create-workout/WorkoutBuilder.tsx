@@ -13,8 +13,8 @@ import { useUser } from "@clerk/nextjs";
 export interface Exercise {
   name: string;
   sets: Array<{
-    weight: number;
-    reps: number;
+    weight: string;
+    reps: string;
   }>;
 }
 
@@ -56,8 +56,8 @@ const WorkoutBuilder = ({
       const exercise: Exercise = {
         name: lastExerciseData.name,
         sets: lastExerciseData.sets.map((set) => ({
-          weight: set.weight,
-          reps: set.reps,
+          weight: set.weight as unknown as string,
+          reps: set.reps as unknown as string,
         })),
       };
       const newExercises = [...selectedExercises];
@@ -77,8 +77,8 @@ const WorkoutBuilder = ({
     const currentExercise = selectedExercises[exerciseIndex];
     if (currentExercise) {
       currentExercise.sets.push({
-        weight: 0,
-        reps: 0,
+        weight: "0",
+        reps: "0",
       });
       const newExercises = [...selectedExercises];
       newExercises[exerciseIndex] = currentExercise;
@@ -99,7 +99,7 @@ const WorkoutBuilder = ({
   };
 
   const handleInputsChange = (
-    set: { weight: number; reps: number },
+    set: { weight: string; reps: string },
     exerciseIndex: number,
     setIndex: number
   ) => {
@@ -119,21 +119,21 @@ const WorkoutBuilder = ({
 
   const handleRepsChange = (
     value: string,
-    set: { weight: number; reps: number },
+    set: { weight: string; reps: string },
     exerciseIndex: number,
     setIndex: number
   ) => {
-    set.reps = Number(value);
+    set.reps = value;
     handleInputsChange(set, exerciseIndex, setIndex);
   };
 
   const handleWeightChange = (
     value: string,
-    set: { weight: number; reps: number },
+    set: { weight: string; reps: string },
     exerciseIndex: number,
     setIndex: number
   ) => {
-    set.weight = Number(value);
+    set.weight = value;
     handleInputsChange(set, exerciseIndex, setIndex);
   };
 
@@ -143,20 +143,20 @@ const WorkoutBuilder = ({
       sets: [
         // Add 4 sets by default
         {
-          weight: 0,
-          reps: 0,
+          weight: "0",
+          reps: "0",
         },
         {
-          weight: 0,
-          reps: 0,
+          weight: "0",
+          reps: "0",
         },
         {
-          weight: 0,
-          reps: 0,
+          weight: "0",
+          reps: "0",
         },
         {
-          weight: 0,
-          reps: 0,
+          weight: "0",
+          reps: "0",
         },
       ],
     };
