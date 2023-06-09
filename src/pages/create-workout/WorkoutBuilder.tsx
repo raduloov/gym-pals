@@ -1,7 +1,7 @@
 import { WorkoutType } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
@@ -231,15 +231,11 @@ const WorkoutBuilder = ({
                       className="my-1 flex items-center gap-1"
                       key={setIndex}
                     >
-                      <Input
-                        width="60px"
+                      <input
                         type="number"
-                        step={0.1}
                         min={0}
-                        animated={false}
                         placeholder="0"
                         value={set.reps}
-                        style={{ fontSize: 22 }}
                         onChange={(e) =>
                           handleRepsChange(
                             parseFloat(e.target.value),
@@ -248,17 +244,15 @@ const WorkoutBuilder = ({
                             setIndex
                           )
                         }
+                        className="w-[80px] rounded-xl p-2.5 text-[22px] text-gray-900"
                       />
                       reps @
-                      <Input
-                        width="80px"
+                      <input
                         type="number"
                         step={0.1}
                         min={0}
-                        animated={false}
                         placeholder="0"
                         value={set.weight}
-                        style={{ fontSize: 22 }}
                         onChange={(e) =>
                           handleWeightChange(
                             parseFloat(e.target.value),
@@ -267,6 +261,7 @@ const WorkoutBuilder = ({
                             setIndex
                           )
                         }
+                        className="w-[90px] rounded-xl p-2.5 text-[22px] text-gray-900"
                       />
                       kg
                       <div
@@ -302,16 +297,15 @@ const WorkoutBuilder = ({
           <div className="flex items-center">
             <div className="flex items-center gap-2 rounded-xl border border-slate-400 p-4 text-xl">
               Body weight:
-              <Input
-                width="80px"
+              <input
                 type="number"
                 step={0.1}
                 min={1}
-                animated={false}
                 placeholder="0"
                 value={bodyWeight}
                 style={{ fontSize: 22 }}
                 onChange={(e) => setBodyWeight(Number(e.target.value))}
+                className="w-[90px] rounded-xl p-2.5 text-[22px] text-gray-900"
               />
               kg
             </div>
