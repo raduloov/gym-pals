@@ -21,7 +21,7 @@ const parseWorkoutContentJSON = (workout: Workout): string | null => {
     return null;
   }
 
-  const { exercises, bodyWeight } = workout.content as unknown as {
+  const { exercises, bodyWeight } = JSON.parse(workout.content as string) as {
     exercises: Exercise[];
     bodyWeight: number;
   };
@@ -107,7 +107,12 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
         </div>
       </div>
 
-      <Button.Group style={{ width: "100%" }} color="white" light>
+      <Button.Group
+        style={{ width: "100%" }}
+        // @ts-ignore
+        color="white"
+        light
+      >
         <Button
           icon={
             isLoading ? (

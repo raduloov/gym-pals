@@ -1,5 +1,5 @@
 import { WorkoutType } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
 import { Button, Input } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
@@ -7,6 +7,8 @@ import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 import { CloseSquare } from "react-iconly";
 import ExercisesModal from "~/components/ExercisesModal";
+import { api } from "~/utils/api";
+import { useUser } from "@clerk/nextjs";
 
 export interface Exercise {
   name: string;
@@ -35,8 +37,41 @@ const WorkoutBuilder = ({
   bodyWeight,
   setBodyWeight,
 }: Props) => {
+  const { user } = useUser();
   const [isSelectingExercises, setIsSelectingExercises] = useState(false);
   const [hasAddedBodyWeight, setHasAddedBodyWeight] = useState(false);
+  const [currentSelectedExercise, setCurrentSelectedExercise] = useState<
+    string | null
+  >(null);
+
+  const { data: lastExerciseData } =
+    api.workouts.getLastExerciseDataFromWorkoutByUserId.useQuery({
+      userId: user?.id ?? "",
+      exerciseName: currentSelectedExercise ?? "",
+    });
+
+  // Populate exercise with values from the last time the user performed it
+  useEffect(() => {
+    if (lastExerciseData && currentSelectedExercise) {
+      const exercise: Exercise = {
+        name: lastExerciseData.name,
+        sets: lastExerciseData.sets.map((set) => ({
+          weight: set.weight,
+          reps: set.reps,
+        })),
+      };
+      const newExercises = [...selectedExercises];
+      newExercises[newExercises.length - 1] = exercise;
+
+      setSelectedExercises(newExercises);
+      setCurrentSelectedExercise(null);
+    }
+  }, [
+    lastExerciseData,
+    currentSelectedExercise,
+    selectedExercises,
+    setSelectedExercises,
+  ]);
 
   const handleAddSet = (exerciseIndex: number) => {
     const currentExercise = selectedExercises[exerciseIndex];
@@ -125,6 +160,7 @@ const WorkoutBuilder = ({
         },
       ],
     };
+    setCurrentSelectedExercise(exercise.title);
     setSelectedExercises([...selectedExercises, selectedExercise]);
     setIsSelectingExercises(false);
   };

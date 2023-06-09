@@ -12,6 +12,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { filterUserForClient } from "~/server/utils/filterUserForClient";
 import type { Workout, WorkoutType } from "@prisma/client";
+import type { Exercise } from "~/pages/create-workout";
 
 const addUserDataToWorkouts = async (workouts: Workout[]) => {
   const users = (
@@ -87,20 +88,7 @@ export const workoutsRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string().min(1).max(100),
-        content: z.object({
-          exercises: z.array(
-            z.object({
-              name: z.string(),
-              sets: z.array(
-                z.object({
-                  weight: z.number(),
-                  reps: z.number(),
-                })
-              ),
-            })
-          ),
-          bodyWeight: z.number(),
-        }),
+        content: z.string(),
         workoutType: z.string(),
       })
     )
@@ -120,5 +108,37 @@ export const workoutsRouter = createTRPCRouter({
       });
 
       return workout;
+    }),
+
+  getLastExerciseDataFromWorkoutByUserId: publicProcedure
+    .input(z.object({ userId: z.string(), exerciseName: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const lastWorkoutWithGivenExercise = await ctx.prisma.workout.findFirst({
+        where: {
+          authorId: input.userId,
+          content: {
+            contains: `"${input.exerciseName}"`,
+          },
+        },
+        orderBy: [{ createdAt: "desc" }],
+      });
+
+      if (!lastWorkoutWithGivenExercise) {
+        return null;
+      }
+
+      const parsedLastWorkoutWithGivenExercise = JSON.parse(
+        lastWorkoutWithGivenExercise.content as string
+      ) as {
+        exercises: Exercise[];
+        bodyWeight: number;
+      };
+
+      const lastExerciseData =
+        parsedLastWorkoutWithGivenExercise.exercises.find(
+          (exercise) => exercise.name === input.exerciseName
+        );
+
+      return lastExerciseData;
     }),
 });

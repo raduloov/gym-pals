@@ -13,7 +13,7 @@ model Workout {
   createdAt   DateTime    @default(now())
   title       String?     @db.Text
   workoutType WorkoutType @default(WEIGHTLIFTING)
-  content     Json?
+  content     String?     @db.Text
   authorId    String
   upvotes     Upvote[]
   comments    Comment[]
