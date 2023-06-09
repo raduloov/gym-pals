@@ -300,7 +300,6 @@ const WorkoutBuilder = ({
             <div className="flex items-center gap-2 rounded-xl border border-slate-400 p-4 text-xl">
               Body weight:
               <input
-                type="decimal"
                 inputMode="decimal"
                 step={0.1}
                 min={1}
