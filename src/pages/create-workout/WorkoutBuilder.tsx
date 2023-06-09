@@ -233,6 +233,7 @@ const WorkoutBuilder = ({
                     >
                       <input
                         type="number"
+                        inputMode="decimal"
                         min={0}
                         placeholder="0"
                         value={set.reps}
@@ -249,6 +250,7 @@ const WorkoutBuilder = ({
                       reps @
                       <input
                         type="number"
+                        inputMode="decimal"
                         step={0.1}
                         min={0}
                         placeholder="0"
@@ -299,6 +301,7 @@ const WorkoutBuilder = ({
               Body weight:
               <input
                 type="number"
+                inputMode="decimal"
                 step={0.1}
                 min={1}
                 placeholder="0"
