@@ -1,11 +1,12 @@
 import { WorkoutType } from "@prisma/client";
 import { useState } from "react";
 import { WorkoutTypesContainer } from "~/components/WorkoutTypesContainer";
-import { Button, Input, Modal, Text } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { workoutTypePrismaToClientMapper } from "~/mappers/workoutTypeMapper";
 import type { WeightliftingExcercise } from "@prisma/client";
 import type { WorkoutTypeClient } from "~/mappers/workoutTypeMapper";
 import { CloseSquare } from "react-iconly";
+import ExercisesModal from "~/components/ExercisesModal";
 
 export interface Exercise {
   name: string;
@@ -175,42 +176,12 @@ const WorkoutBuilder = ({
 
   return (
     <div className="mt-2 w-full">
-      <Modal
-        closeButton
-        blur
-        open={isSelectingExercises}
-        onClose={() => setIsSelectingExercises(false)}
-      >
-        <Modal.Header>
-          <Text id="modal-title" size={18}>
-            Choose your next exercise
-          </Text>
-        </Modal.Header>
-        <Modal.Body>
-          <Input placeholder="Search for an exercise" />
-          <div className="h-[350px] overflow-y-auto">
-            {allExercises?.map((exercise) => (
-              <div
-                className="cursor-pointer p-1"
-                onClick={() => handleAddExercise(exercise)}
-                key={exercise.id}
-              >
-                {exercise.title}
-              </div>
-            ))}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            auto
-            flat
-            color="error"
-            onPress={() => setIsSelectingExercises(false)}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ExercisesModal
+        isSelectingExercises={isSelectingExercises}
+        setIsSelectingExercises={setIsSelectingExercises}
+        allExercises={allExercises}
+        handleAddExercise={handleAddExercise}
+      />
 
       <div className="m-4 flex flex-wrap justify-center gap-5">
         {selectedExercises &&
