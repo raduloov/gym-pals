@@ -23,7 +23,7 @@ const CreateWorkoutWizard = () => {
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
   const [selectedWorkoutType, setSelectedWorkoutType] =
     useState<WorkoutTypeClient | null>(null);
-  const [bodyWeight, setBodyWeight] = useState<number>(0);
+  const [bodyWeight, setBodyWeight] = useState<string>("0");
 
   const { data: allExercises, isLoading: exercisesLoading } =
     api.exercises.getAll.useQuery();

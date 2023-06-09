@@ -24,8 +24,8 @@ interface Props {
   setSelectedExercises: (exercises: Exercise[]) => void;
   selectedWorkoutType: WorkoutTypeClient | null;
   setSelectedWorkoutType: (workoutType: WorkoutTypeClient) => void;
-  bodyWeight: number;
-  setBodyWeight: (bodyWeight: number) => void;
+  bodyWeight: string;
+  setBodyWeight: (bodyWeight: string) => void;
 }
 
 const WorkoutBuilder = ({
@@ -171,7 +171,7 @@ const WorkoutBuilder = ({
     );
 
   const handleRemoveBodyWeight = () => {
-    setBodyWeight(0);
+    setBodyWeight("0");
     setHasAddedBodyWeight(false);
   };
 
@@ -239,7 +239,7 @@ const WorkoutBuilder = ({
                         value={set.reps}
                         onChange={(e) =>
                           handleRepsChange(
-                            parseFloat(e.target.value),
+                            Number(e.target.value),
                             set,
                             exerciseIndex,
                             setIndex
@@ -257,7 +257,7 @@ const WorkoutBuilder = ({
                         value={set.weight}
                         onChange={(e) =>
                           handleWeightChange(
-                            parseFloat(e.target.value),
+                            Number(e.target.value),
                             set,
                             exerciseIndex,
                             setIndex
@@ -300,12 +300,14 @@ const WorkoutBuilder = ({
             <div className="flex items-center gap-2 rounded-xl border border-slate-400 p-4 text-xl">
               Body weight:
               <input
+                type="number"
+                inputMode="decimal"
                 step={0.1}
                 min={1}
                 placeholder="0"
                 value={bodyWeight}
                 style={{ fontSize: 22 }}
-                onChange={(e) => setBodyWeight(Number(e.target.value))}
+                onChange={(e) => setBodyWeight(e.target.value)}
                 className="w-[90px] rounded-xl p-2.5 text-[22px] text-gray-900"
               />
               kg
