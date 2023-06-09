@@ -123,7 +123,7 @@ const WorkoutBuilder = ({
     exerciseIndex: number,
     setIndex: number
   ) => {
-    set.reps = value;
+    set.reps = value.replace(/,/, ".");
     handleInputsChange(set, exerciseIndex, setIndex);
   };
 
@@ -133,7 +133,7 @@ const WorkoutBuilder = ({
     exerciseIndex: number,
     setIndex: number
   ) => {
-    set.weight = value;
+    set.weight = value.replace(/,/, ".");
     handleInputsChange(set, exerciseIndex, setIndex);
   };
 
@@ -234,6 +234,7 @@ const WorkoutBuilder = ({
                       <input
                         type="number"
                         inputMode="decimal"
+                        pattern="^[0-9]+(\.[0-9]+)?$"
                         min={0}
                         placeholder="0"
                         value={set.reps}
@@ -251,6 +252,7 @@ const WorkoutBuilder = ({
                       <input
                         type="number"
                         inputMode="decimal"
+                        pattern="^[0-9]+(\.[0-9]+)?$"
                         step={0.1}
                         min={0}
                         placeholder="0"
@@ -302,12 +304,15 @@ const WorkoutBuilder = ({
               <input
                 type="number"
                 inputMode="decimal"
+                pattern="^[0-9]+(\.[0-9]+)?$"
                 step={0.1}
                 min={1}
                 placeholder="0"
                 value={bodyWeight}
                 style={{ fontSize: 22 }}
-                onChange={(e) => setBodyWeight(e.target.value)}
+                onChange={(e) =>
+                  setBodyWeight(e.target.value.replace(/,/, "."))
+                }
                 className="w-[90px] rounded-xl p-2.5 text-[22px] text-gray-900"
               />
               kg
