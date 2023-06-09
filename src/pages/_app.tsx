@@ -8,6 +8,11 @@ import Head from "next/head";
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
+      <meta
+        name="viewport"
+        // Disable zoom on input on iOS
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      />
       <Head>
         <title>Gym-Pals</title>
         <meta name="description" content="💪" />
