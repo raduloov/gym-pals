@@ -63,7 +63,7 @@ export const workoutsRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const workouts = await ctx.prisma.workout.findMany({
-      take: 100,
+      take: 100, // TODO: pagination
       orderBy: [{ createdAt: "desc" }],
     });
 
@@ -108,6 +108,40 @@ export const workoutsRouter = createTRPCRouter({
       });
 
       return workout;
+    }),
+
+  update: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(1).max(100),
+        content: z.string(),
+        workoutType: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId;
+
+      const workout = await ctx.prisma.workout.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!workout) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (workout.authorId !== authorId) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const updatedWorkout = await ctx.prisma.workout.update({
+        where: { id: input.id },
+        data: {
+          title: input.title,
+          content: input.content,
+          workoutType: input.workoutType as WorkoutType,
+        },
+      });
+
+      return updatedWorkout;
     }),
 
   getLastExerciseDataFromWorkoutByUserId: publicProcedure

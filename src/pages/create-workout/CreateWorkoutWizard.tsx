@@ -28,39 +28,98 @@ const CreateWorkoutWizard = () => {
   const { data: allExercises, isLoading: exercisesLoading } =
     api.exercises.getAll.useQuery();
 
-  const { mutate, isLoading: isPosting } = api.workouts.create.useMutation({
-    onSuccess: async () => {
-      await ctx.workouts.getAll.invalidate();
-      await router.push("/");
-      toast.success("Workout posted!");
-    },
-    onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors;
-      if (errorMessage?.title) {
-        toast.error("Please enter a title.");
-      } else {
-        toast.error("Failed to post! Please try again later.");
-      }
-    },
-  });
+  const { mutate: createWorkout, isLoading: isPosting } =
+    api.workouts.create.useMutation({
+      onSuccess: async () => {
+        await ctx.workouts.getAll.invalidate();
+        await router.push("/");
+        toast.success("Workout posted!");
+      },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors;
+        if (errorMessage?.title) {
+          toast.error("Please enter a title.");
+        } else {
+          toast.error("Failed to post! Please try again later.");
+        }
+      },
+    });
+
+  const { mutate: updateWorkout, isLoading: isUpdating } =
+    api.workouts.update.useMutation({
+      onSuccess: async () => {
+        await ctx.workouts.getAll.invalidate();
+        await router.push("/");
+        toast.success("Workout updated!");
+      },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors;
+        if (errorMessage?.title) {
+          toast.error("Please enter a title.");
+        } else {
+          toast.error("Failed to update! Please try again later.");
+        }
+      },
+    });
+
+  const { workoutId } = router.query;
+  const isEditing = !!workoutId;
+  const { data: workoutData, isLoading: isWorkoutLoading } =
+    api.workouts.getById.useQuery({
+      id: workoutId as string,
+    });
+
+  // Populate fields if editing
+  useEffect(() => {
+    if (!isEditing || !workoutData || isWorkoutLoading) {
+      return;
+    }
+
+    const { workout } = workoutData;
+    const { exercises, bodyWeight } = JSON.parse(workout.content as string) as {
+      exercises: Exercise[];
+      bodyWeight: number;
+    };
+
+    setTitle(workout.title ?? "");
+    setSelectedExercises(exercises);
+    setSelectedWorkoutType(
+      workoutTypePrismaToClientMapper(workout.workoutType)
+    );
+    setBodyWeight(bodyWeight.toString());
+  }, [isEditing, workoutData, isWorkoutLoading]);
 
   useEffect(() => {
     let loadingToast = "";
     if (isPosting) {
       loadingToast = toast.loading("Posting workout...");
+    } else if (isUpdating) {
+      loadingToast = toast.loading("Updating workout...");
     }
 
     return () => toast.dismiss(loadingToast);
-  }, [isPosting]);
+  }, [isPosting, isUpdating]);
 
-  const handlePostWorkout = () =>
-    mutate({
+  const handlePostWorkout = () => {
+    if (isEditing) {
+      return updateWorkout({
+        id: workoutId as string,
+        title,
+        content: JSON.stringify({ exercises: selectedExercises, bodyWeight }),
+        workoutType: workoutTypeClientToPrismaMapper(
+          selectedWorkoutType as WorkoutTypeClient
+        ),
+      });
+    }
+
+    return createWorkout({
       title,
       content: JSON.stringify({ exercises: selectedExercises, bodyWeight: 0 }),
       workoutType: workoutTypeClientToPrismaMapper(
         selectedWorkoutType as WorkoutTypeClient
       ),
     });
+  };
 
   const handleBack = () => {
     if (selectedWorkoutType) {
@@ -96,7 +155,11 @@ const CreateWorkoutWizard = () => {
         selectedWorkoutType !==
           workoutTypePrismaToClientMapper(WorkoutType.WEIGHTLIFTING))
     ) {
-      return <Button onClick={handlePostWorkout}>Post workout</Button>;
+      return (
+        <Button onClick={handlePostWorkout}>
+          {isEditing ? "Edit" : "Post"} workout
+        </Button>
+      );
     }
 
     return null;
@@ -146,6 +209,7 @@ const CreateWorkoutWizard = () => {
 
         {allExercises && (
           <WorkoutBuilder
+            isEditing={isEditing}
             allExercises={allExercises}
             selectedExercises={selectedExercises}
             setSelectedExercises={setSelectedExercises}

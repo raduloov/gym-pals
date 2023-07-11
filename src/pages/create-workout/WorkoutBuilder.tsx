@@ -19,6 +19,7 @@ export interface Exercise {
 }
 
 interface Props {
+  isEditing: boolean;
   allExercises: WeightliftingExcercise[];
   selectedExercises: Exercise[];
   setSelectedExercises: (exercises: Exercise[]) => void;
@@ -29,6 +30,7 @@ interface Props {
 }
 
 const WorkoutBuilder = ({
+  isEditing,
   allExercises,
   selectedExercises,
   setSelectedExercises,
@@ -43,6 +45,16 @@ const WorkoutBuilder = ({
   const [currentSelectedExercise, setCurrentSelectedExercise] = useState<
     string | null
   >(null);
+
+  // Populate fields if editing
+  useEffect(() => {
+    if (!isEditing) {
+      return;
+    }
+
+    setHasAddedBodyWeight(!!bodyWeight);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing]);
 
   const { data: lastExerciseData } =
     api.workouts.getLastExerciseDataFromWorkoutByUserId.useQuery({
@@ -186,11 +198,11 @@ const WorkoutBuilder = ({
       return (
         <div className="flex justify-end">
           <div className="flex flex-col gap-1 p-1">
-            <Button flat onClick={() => setIsSelectingExercises(true)}>
+            <Button flat onPress={() => setIsSelectingExercises(true)}>
               + Add exercise
             </Button>
             {!hasAddedBodyWeight && (
-              <Button flat onClick={() => setHasAddedBodyWeight(true)}>
+              <Button flat onPress={() => setHasAddedBodyWeight(true)}>
                 + Add body weight
               </Button>
             )}
@@ -282,7 +294,7 @@ const WorkoutBuilder = ({
                     auto
                     ghost
                     size="sm"
-                    onClick={() => handleAddSet(exerciseIndex)}
+                    onPress={() => handleAddSet(exerciseIndex)}
                   >
                     + Add set
                   </Button>

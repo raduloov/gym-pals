@@ -8,7 +8,7 @@ import { WorkoutType } from "@prisma/client";
 import type { Workout } from "@prisma/client";
 import type { Exercise } from "~/pages/create-workout";
 import { Avatar, Button, Loading } from "@nextui-org/react";
-import { Chat, Heart } from "react-iconly";
+import { Chat, EditSquare, Heart } from "react-iconly";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
 
@@ -59,6 +59,7 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
   const userHasUpvoted = upvotes?.some(
     (upvote) => upvote.author.id === user?.id
   );
+  const userIsAuthor = user?.id === author.id;
 
   const { mutate, isLoading } = api.upvotes.createUpvoteForWorkout.useMutation({
     onSuccess: async () => {
@@ -86,19 +87,31 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
           width={56}
           height={56}
         />
-        <div className="flex flex-col">
-          <div className="flex gap-1 whitespace-nowrap text-slate-400">
-            <Link href={`/@${author.username}`}>
-              <span>{`@${author.username}`}</span>
-            </Link>
-            <span className="text-slate-400">
-              {` · ${workoutTypePrismaToClientMapper(workout.workoutType)}`}
-            </span>
-            <Link href={`/workout/${workout.id}`}>
-              <span className="whitespace-pre-wrap font-thin">{` · ${dayjs(
-                workout.createdAt
-              ).fromNow()}`}</span>
-            </Link>
+        <div className="flex w-full flex-col">
+          <div className="flex justify-between gap-1 whitespace-nowrap text-slate-400">
+            <div>
+              <Link href={`/@${author.username}`}>
+                <span>{`@${author.username}`}</span>
+              </Link>
+              <span className="text-slate-400">
+                {` · ${workoutTypePrismaToClientMapper(workout.workoutType)}`}
+              </span>
+              <Link href={`/workout/${workout.id}`}>
+                <span className="whitespace-pre-wrap font-thin">{` · ${dayjs(
+                  workout.createdAt
+                ).fromNow()}`}</span>
+              </Link>
+            </div>
+
+            {userIsAuthor && (
+              <Link
+                href={`/create-workout?workoutId=${encodeURIComponent(
+                  workout.id
+                )}`}
+              >
+                <EditSquare set="light" primaryColor="gray" />
+              </Link>
+            )}
           </div>
           <span className="text-2xl">{workout.title}</span>
           <span className="whitespace-pre-wrap text-slate-400">
