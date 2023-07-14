@@ -37,20 +37,22 @@ const ExercisesModal = ({
     setError(null);
   };
 
-  const { mutate: createExercise } = api.exercises.create.useMutation({
-    onSuccess: async () => {
-      await ctx.exercises.getAll.invalidate();
-      setNewExerciseName("");
-    },
-    onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors;
-      if (errorMessage?.title) {
-        setError("Please enter an exercise name.");
-      } else {
-        toast.error("Failed to create exercise! Please try again later.");
-      }
-    },
-  });
+  const { mutate: createExercise, isLoading: isCreating } =
+    api.exercises.create.useMutation({
+      onSuccess: async () => {
+        await ctx.exercises.getAll.invalidate();
+        setNewExerciseName("");
+        setIsAddingNewExercise(false);
+      },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors;
+        if (errorMessage?.title) {
+          setError("Please enter an exercise name.");
+        } else {
+          toast.error("Failed to create exercise! Please try again later.");
+        }
+      },
+    });
 
   const { mutate: deleteExercise, isLoading: isDeleting } =
     api.exercises.delete.useMutation({
@@ -79,8 +81,7 @@ const ExercisesModal = ({
     }
 
     createExercise({ name: newExerciseName });
-    setError(null);
-    return setIsAddingNewExercise(false);
+    return setError(null);
   };
 
   const handleDeleteExercise = (exerciseId: number) => {
@@ -111,7 +112,10 @@ const ExercisesModal = ({
           {exercise.title}
         </div>
 
-        <div onClick={() => handleDeleteExercise(exercise.id)}>
+        <div
+          className="flex items-center justify-center"
+          onClick={() => handleDeleteExercise(exercise.id)}
+        >
           {isDeleting && deletingExerciseId === exercise.id ? (
             <Loading type="spinner" size="sm" />
           ) : (
@@ -165,9 +169,10 @@ const ExercisesModal = ({
           auto
           light
           color="secondary"
+          icon={isCreating ? <Loading type="spinner" /> : undefined}
           onPress={() => handleAddNewExercise()}
         >
-          Add new exercise
+          {!isCreating && "Add new exercise"}
         </Button>
         <Button
           auto
