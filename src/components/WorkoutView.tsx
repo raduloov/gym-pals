@@ -90,16 +90,18 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
         <div className="flex w-full flex-col">
           <div className="flex justify-between gap-1 whitespace-nowrap text-slate-400">
             <div>
-              <Link href={`/@${author.username}`}>
-                <span>{`@${author.username}`}</span>
-              </Link>
-              <span className="text-slate-400">
-                {` · ${workoutTypePrismaToClientMapper(workout.workoutType)}`}
-              </span>
+              <div>
+                <Link href={`/@${author.username}`}>
+                  <span>{`@${author.username}`}</span>
+                </Link>
+                <span className="text-slate-400">
+                  {` · ${workoutTypePrismaToClientMapper(workout.workoutType)}`}
+                </span>
+              </div>
               <Link href={`/workout/${workout.id}`}>
-                <span className="whitespace-pre-wrap font-thin">{` · ${dayjs(
-                  workout.createdAt
-                ).fromNow()}`}</span>
+                <span className="whitespace-pre-wrap font-thin">
+                  {dayjs(workout.createdAt).fromNow()}
+                </span>
               </Link>
             </div>
 
