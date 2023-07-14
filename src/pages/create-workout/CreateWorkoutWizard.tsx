@@ -114,7 +114,7 @@ const CreateWorkoutWizard = () => {
 
     return createWorkout({
       title,
-      content: JSON.stringify({ exercises: selectedExercises, bodyWeight: 0 }),
+      content: JSON.stringify({ exercises: selectedExercises, bodyWeight }),
       workoutType: workoutTypeClientToPrismaMapper(
         selectedWorkoutType as WorkoutTypeClient
       ),
@@ -157,7 +157,7 @@ const CreateWorkoutWizard = () => {
     ) {
       return (
         <Button onClick={handlePostWorkout}>
-          {isEditing ? "Edit" : "Post"} workout
+          {isEditing ? "Update" : "Post"} workout
         </Button>
       );
     }
