@@ -11,6 +11,7 @@ import { Avatar, Button, Loading } from "@nextui-org/react";
 import { Chat, EditSquare, Heart } from "react-iconly";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 dayjs.extend(relativeTime);
 
@@ -51,6 +52,8 @@ const parseWorkoutContentJSON = (workout: Workout): string | null => {
 export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
   const { user } = useUser();
   const ctx = api.useContext();
+
+  const { isMobile } = useWindowSize();
 
   const { data: upvotes } = api.upvotes.getUpvotesForWorkout.useQuery({
     workoutId: workout.id,
@@ -97,12 +100,21 @@ export const WorkoutView = ({ workout, author }: WorkoutWithUser) => {
                 <span className="text-slate-400">
                   {` · ${workoutTypePrismaToClientMapper(workout.workoutType)}`}
                 </span>
+                {!isMobile && (
+                  <Link href={`/workout/${workout.id}`}>
+                    <span className="whitespace-pre-wrap font-thin">
+                      {` · ${dayjs(workout.createdAt).fromNow()}`}
+                    </span>
+                  </Link>
+                )}
               </div>
-              <Link href={`/workout/${workout.id}`}>
-                <span className="whitespace-pre-wrap font-thin">
-                  {dayjs(workout.createdAt).fromNow()}
-                </span>
-              </Link>
+              {isMobile && (
+                <Link href={`/workout/${workout.id}`}>
+                  <span className="whitespace-pre-wrap font-thin">
+                    {dayjs(workout.createdAt).fromNow()}
+                  </span>
+                </Link>
+              )}
             </div>
 
             {userIsAuthor && (
